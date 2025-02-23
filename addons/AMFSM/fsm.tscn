@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dwl34v74goni4"]
+
+[ext_resource type="Script" path="res://addons/AMFSM/fsm.gd" id="1_vsknm"]
+
+[node name="FiniteStateMachine" type="Node"]
+script = ExtResource("1_vsknm")

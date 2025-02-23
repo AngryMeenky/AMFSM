@@ -1,0 +1,234 @@
+@icon("res://addons/AMFSM/icons/FSM.svg")
+extends Node
+class_name FiniteStateMachine
+
+
+signal errored(fsm: FiniteStateMachine)
+signal completed(fsm: FiniteStateMachine)
+signal state_changed(fsm: FiniteStateMachine, from: StringName, to: StringName)
+
+
+const START := &"Start"
+const FINAL := &"Final"
+const ERROR := &"Error"
+
+
+var _states := {}
+var _current: State = null
+var _transitioning := false
+
+@export var resolve_root: NodePath = ^"."
+@export var states: Array[Dictionary] = [
+	{ "name": START },
+	{ "name": ERROR },
+	{ "name": FINAL },
+]
+
+
+func _ready() -> void:
+	var root := get_node(resolve_root)
+	if root == null:
+		printerr("Unable to locate node for NodePath resolution: ", resolve_root)
+		return
+
+	# make sure all the states exist
+	for state in states:
+		_states[state.name] = State.make(self, state["name"])
+	# now add in all the transitions
+	for state in states:
+		unpack(root, state)
+
+
+func is_errored() -> bool:
+	return _current.name == ERROR
+
+
+func is_completed() -> bool:
+	return _current.name == FINAL
+
+
+func get_state() -> StringName:
+	return _current.name
+
+
+func add_state(state: StringName) -> void:
+	assert(state not in _states, "Attempt to add a duplicate state")
+	states.append(State.make(self, state))
+	_states[state] = states.back()
+
+
+func remove_state(name: StringName) -> void:
+	assert(name in _states, "Attempt to remove a non-existant state")
+	var state = _states[name]
+	assert(state.removable, "Can't remove basic state: %s" % name)
+	
+	for src in state.incoming.keys():
+		var from: State = _states[src]
+		for trigger in state.incoming[src].duplicate():
+			from.remove_transition(trigger)
+
+	_states.erase(name)
+	states.erase(state)
+
+
+func add_callbacks(state: StringName, enter = null, stay = null, exit = null) -> void:
+	assert(state in _states, "Attempt to update a non-existant state")
+	_states[state].add_callbacks(enter, stay, exit)
+
+
+func remove_callbacks(state: StringName, enter = null, stay = null, exit = null) -> void:
+	assert(state in _states, "Attempt to update a non-existant state")
+	_states[state].remove_callbacks(enter, stay, exit)
+
+
+func add_transition(from: StringName, trigger: StringName, to: StringName) -> void:
+	assert(from in _states, "Can't transition from a non-existant state")
+	assert(to in _states, "Can't transition to a non-existant state")
+	_states[from].add_transition(trigger, to)
+
+
+func remove_transition(from: StringName, trigger: StringName) -> void:
+	assert(from in _states, "Can't transition from a non-existant state")
+	_states[from].remove_transition(trigger)
+
+
+func update(trigger: StringName) -> State:
+	assert(not _transitioning, "Can't update FSM during an update")
+	_transitioning = true
+	var next := _current.get_target(trigger)
+	if next == _current:
+		next.stay()
+	else:
+		var old := _current.name
+		_current.exit()
+		_current = next
+		next.enter()
+		state_changed.emit(self, old, next.name)
+		if next.name == FINAL:
+			completed.emit(self)
+	_transitioning = false
+	# be loud about the errored state
+	if _current.name == ERROR:
+		errored.emit(self)
+	return next
+
+
+func reset() -> void:
+	assert(not _transitioning, "Can't reset FSM during an update")
+	if _current.name != START:
+		var old := _current.name
+		_current.exit()
+		_current = _states[START]
+		_current.enter()
+		state_changed.emit(self, old, START)
+
+
+func _resolve_callback(np: NodePath) -> Callable:
+	print(np)
+	return Callable()
+
+
+func unpack(root: Node, data: Dictionary) -> void:
+	# grab the correct state
+	var state = _states[data["name"]]
+	
+	# add in all the transitions
+	var transitions: Dictionary = data.get("transitions", {})
+	for trigger in transitions.keys():
+		state.add_transition(trigger, transitions[trigger])
+
+	# connect all the callbacks
+	var enter: Array[NodePath] = data.get("enter", [] as Array[NodePath])
+	var stay:  Array[NodePath] = data.get("stay",  [] as Array[NodePath])
+	var exit:  Array[NodePath] = data.get("exit",  [] as Array[NodePath])
+	var count: int = max(enter.size(), stay.size(), exit.size())
+	for idx in count:
+		state.add_callbacks(
+			_resolve_callback(enter[idx] if idx < enter.size() else ^""),
+			_resolve_callback(stay[idx]  if idx < stay.size()  else ^""),
+			_resolve_callback(exit[idx]  if idx < exit.size()  else ^"")
+		)
+
+#func pack(root: Node, state: State) -> Dictionary:
+#	return {} # TODO: perform the packing
+
+
+class State extends RefCounted:
+	var name := &""
+	var incoming := {}
+	var transitions := {}
+	var removable := true
+	var host: FiniteStateMachine = null
+	var cb_enter: Array[Callable] = []
+	var cb_stay:  Array[Callable] = []
+	var cb_exit:  Array[Callable] = []
+
+
+	static func make(parent: FiniteStateMachine, name: StringName) -> State:
+		var state = State.new()
+		state.name = name
+		match name:
+			ERROR, FINAL:
+				state.transitions.make_read_only()
+				state.removable = false
+			START:
+				state.removable = false
+		return state
+
+
+	func add_callbacks(enter: Callable, stay := Callable(), exit := Callable()) -> void:
+		if enter.is_valid():
+			cb_enter.append(enter)
+		if stay.is_valid():
+			cb_stay.append(stay)
+		if exit.is_valid():
+			cb_exit.append(exit)
+
+
+	func remove_callbacks(enter: Callable, stay := Callable(), exit := Callable()) -> void:
+		if enter.is_valid():
+			cb_enter.erase(enter)
+		if stay.is_valid():
+			cb_stay.erase(stay)
+		if exit.is_valid():
+			cb_exit.erase(exit)
+
+
+	func add_transition(trigger: StringName, state: StringName) -> void:
+		assert(trigger not in transitions, "Transition trigger already assigned")
+		assert(not transitions.is_read_only(), "Attempt to modify a terminal state")
+
+		var target: State = host._states[state]
+		transitions[trigger] = target
+		if name not in target.incoming:
+			target.incoming[name] = []
+		target.incoming[name].append(trigger)
+
+
+	func remove_transition(trigger: StringName) -> void:
+		assert(trigger in transitions, "Can't remove non-existant transition trigger")
+		var target: State = transitions[trigger]
+		var list: Array = target.incoming[name]
+		list.erase(trigger)
+		if list.is_empty():
+			target.incoming.erase(name)
+		transitions.erase(trigger)
+
+
+	func get_target(trigger: StringName) -> State:
+		return transitions.get(trigger, host._states[ERROR])
+
+
+	func enter() -> void:
+		for cb in cb_enter:
+			cb.call(host, self)
+
+
+	func stay() -> void:
+		for cb in cb_stay:
+			cb.call(host, self)
+
+
+	func exit() -> void:
+		for cb in cb_exit:
+			cb.call(host, self)
