@@ -1,0 +1,56 @@
+[gd_scene load_steps=3 format=3 uid="uid://dmwp7qah7jmu1"]
+
+[ext_resource type="Script" path="res://addons/AMFSM/amfsm_machine_editor.gd" id="1_sebgw"]
+[ext_resource type="Texture2D" uid="uid://h4ii38qx5cii" path="res://addons/AMFSM/icons/Add.svg" id="2_dar12"]
+
+[node name="AmfsmMachineEditor" type="EditorProperty"]
+offset_right = 387.0
+offset_bottom = 62.0
+script = ExtResource("1_sebgw")
+
+[node name="Activator" type="Button" parent="."]
+layout_mode = 2
+text = "Array[State]"
+
+[node name="BottomEditor" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBox" type="VBoxContainer" parent="BottomEditor"]
+layout_mode = 2
+
+[node name="Stats" type="HBoxContainer" parent="BottomEditor/VBox"]
+layout_mode = 2
+
+[node name="SizeLabel" type="Label" parent="BottomEditor/VBox/Stats"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Size:"
+
+[node name="SizeDisplay" type="Label" parent="BottomEditor/VBox/Stats"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+
+[node name="States" type="VBoxContainer" parent="BottomEditor/VBox"]
+layout_mode = 2
+
+[node name="HBox" type="HBoxContainer" parent="BottomEditor/VBox"]
+layout_mode = 2
+
+[node name="NewState" type="Button" parent="BottomEditor/VBox/HBox"]
+layout_mode = 2
+size_flags_stretch_ratio = 0.0
+disabled = true
+button_mask = 5
+text = "Add State"
+icon = ExtResource("2_dar12")
+
+[node name="NewName" type="LineEdit" parent="BottomEditor/VBox/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "State Name"
+
+[connection signal="pressed" from="Activator" to="." method="_on_activator_pressed"]
+[connection signal="pressed" from="BottomEditor/VBox/HBox/NewState" to="." method="_on_new_state_pressed"]
+[connection signal="text_changed" from="BottomEditor/VBox/HBox/NewName" to="." method="_on_new_name_changed"]

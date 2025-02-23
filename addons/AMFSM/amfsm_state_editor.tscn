@@ -1,0 +1,103 @@
+[gd_scene load_steps=5 format=3 uid="uid://chpk77lbgl43x"]
+
+[ext_resource type="Script" path="res://addons/AMFSM/amfsm_state_editor.gd" id="1_sebgw"]
+[ext_resource type="Texture2D" uid="uid://h4ii38qx5cii" path="res://addons/AMFSM/icons/Add.svg" id="2_dar12"]
+[ext_resource type="Texture2D" uid="uid://c5xd34ulnqt0g" path="res://addons/AMFSM/icons/TripleBar.svg" id="2_ruhic"]
+[ext_resource type="Texture2D" uid="uid://bkvjm8g1ad2al" path="res://addons/AMFSM/icons/Remove.svg" id="3_pagi2"]
+
+[node name="AmfsmStateEditor" type="VBoxContainer"]
+offset_right = 318.0
+offset_bottom = 182.0
+script = ExtResource("1_sebgw")
+
+[node name="HBox" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Panel" type="PanelContainer" parent="HBox"]
+custom_minimum_size = Vector2(31, 0)
+layout_mode = 2
+
+[node name="Handle" type="TextureRect" parent="HBox/Panel"]
+layout_mode = 2
+texture = ExtResource("2_ruhic")
+
+[node name="Index" type="Label" parent="HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+
+[node name="Toggle" type="Button" parent="HBox"]
+layout_mode = 2
+text = "State Name"
+
+[node name="Remove" type="Button" parent="HBox"]
+layout_mode = 2
+icon = ExtResource("3_pagi2")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+visible = false
+layout_mode = 2
+
+[node name="Transitions" type="GridContainer" parent="VBox"]
+layout_mode = 2
+columns = 3
+
+[node name="Triggers" type="Label" parent="VBox/Transitions"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Trigger Input"
+
+[node name="Targets" type="Label" parent="VBox/Transitions"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Target State"
+
+[node name="LeftIntentionallyBlank" type="Label" parent="VBox/Transitions"]
+layout_mode = 2
+
+[node name="AddTransition" type="MarginContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="VBox/AddTransition"]
+layout_mode = 2
+
+[node name="Heading" type="Label" parent="VBox/AddTransition/VBox"]
+layout_mode = 2
+text = "Create New Transition"
+horizontal_alignment = 1
+
+[node name="Create" type="GridContainer" parent="VBox/AddTransition/VBox"]
+layout_mode = 2
+columns = 2
+
+[node name="TriggerLabel" type="Label" parent="VBox/AddTransition/VBox/Create"]
+layout_mode = 2
+text = "Trigger Input:"
+
+[node name="Trigger" type="LineEdit" parent="VBox/AddTransition/VBox/Create"]
+layout_mode = 2
+placeholder_text = "Trigger Text"
+
+[node name="TargetLabel" type="Label" parent="VBox/AddTransition/VBox/Create"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Target State:"
+
+[node name="Target" type="OptionButton" parent="VBox/AddTransition/VBox/Create"]
+layout_mode = 2
+size_flags_horizontal = 3
+allow_reselect = true
+
+[node name="AddNew" type="Button" parent="VBox/AddTransition/VBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+disabled = true
+text = "Add Transition"
+icon = ExtResource("2_dar12")
+
+[connection signal="pressed" from="HBox/Toggle" to="." method="_on_toggle_pressed"]
+[connection signal="pressed" from="HBox/Remove" to="." method="_on_remove_state_pressed"]
+[connection signal="text_changed" from="VBox/AddTransition/VBox/Create/Trigger" to="." method="_on_trigger_changed"]
+[connection signal="text_submitted" from="VBox/AddTransition/VBox/Create/Trigger" to="." method="_on_trigger_submitted"]
+[connection signal="item_selected" from="VBox/AddTransition/VBox/Create/Target" to="." method="_on_target_selected"]
+[connection signal="pressed" from="VBox/AddTransition/VBox/AddNew" to="." method="_on_add_new_pressed"]
