@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="128"
+   height="128"
+   viewBox="0 0 33.866666 33.866668"
+   version="1.1"
+   id="svg5"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2" />
+  <g
+     id="layer1">
+    <path
+       style="fill:none;stroke:#ececec;stroke-width:4.23334;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 25.4,4.2333336 14.816666,19.05"
+       id="path2147" />
+    <path
+       style="fill:none;stroke:#ececec;stroke-width:4.23334;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 4.2333336,29.633334 14.816666,19.05 29.633334,29.633334 25.4,4.2333336 H 4.2333336 L 14.816666,19.05"
+       id="path1200" />
+    <circle
+       style="fill:#cccccc;fill-rule:evenodd;stroke-width:2.11666"
+       id="path31"
+       cx="4.2333336"
+       cy="4.2333336"
+       r="4.2333336" />
+    <circle
+       style="fill:#cccccc;fill-rule:evenodd;stroke-width:2.11666"
+       id="path31-3"
+       cx="29.633333"
+       cy="29.633333"
+       r="4.2333336" />
+    <circle
+       style="fill:#cccccc;fill-rule:evenodd;stroke-width:2.11666"
+       id="path31-6"
+       cx="25.4"
+       cy="4.2333336"
+       r="4.2333336" />
+    <circle
+       style="fill:#cccccc;fill-rule:evenodd;stroke-width:2.11666"
+       id="path31-7"
+       cx="14.816667"
+       cy="19.050001"
+       r="4.2333336" />
+    <circle
+       style="fill:#cccccc;fill-rule:evenodd;stroke-width:2.11666"
+       id="path31-5"
+       cx="4.2333336"
+       cy="29.633333"
+       r="4.2333336" />
+  </g>
+</svg>
