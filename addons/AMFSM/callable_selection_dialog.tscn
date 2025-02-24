@@ -1,0 +1,73 @@
+[gd_scene load_steps=3 format=3 uid="uid://b3l7quqlx1vvo"]
+
+[ext_resource type="Script" path="res://addons/AMFSM/callable_selection_dialog.gd" id="1_jp6f5"]
+[ext_resource type="Texture2D" uid="uid://bvougical7gbp" path="res://addons/AMFSM/icons/Pick.svg" id="2_srxln"]
+
+[node name="CallableSelectionDialog" type="ConfirmationDialog"]
+auto_translate_mode = 1
+title = "Select Callable"
+initial_position = 4
+size = Vector2i(640, 640)
+visible = true
+ok_button_text = "Select"
+script = ExtResource("1_jp6f5")
+
+[node name="HBox" type="HBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -49.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Simple" type="VBoxContainer" parent="HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ProtoLabel" type="Label" parent="HBox/Simple"]
+layout_mode = 2
+text = "Prototype:"
+
+[node name="Prototype" type="LineEdit" parent="HBox/Simple"]
+layout_mode = 2
+text = "func callable(fsm: FiniteStateMachine, state: StringName)"
+editable = false
+
+[node name="ScriptLabel" type="Label" parent="HBox/Simple"]
+layout_mode = 2
+text = "Connect to Script:"
+
+[node name="Filter" type="LineEdit" parent="HBox/Simple"]
+layout_mode = 2
+
+[node name="SceneTree" type="Tree" parent="HBox/Simple"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/draw_guides = 0
+theme_override_constants/draw_relationship_lines = 1
+columns = 2
+
+[node name="ReceiverLabel" type="Label" parent="HBox/Simple"]
+layout_mode = 2
+text = "Reciever Method:"
+
+[node name="Receiver" type="HBoxContainer" parent="HBox/Simple"]
+layout_mode = 2
+
+[node name="MethodName" type="LineEdit" parent="HBox/Simple/Receiver"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Pick" type="Button" parent="HBox/Simple/Receiver"]
+layout_mode = 2
+text = "Pick
+"
+icon = ExtResource("2_srxln")
+
+[node name="Advanced" type="VBoxContainer" parent="HBox"]
+visible = false
+layout_mode = 2
