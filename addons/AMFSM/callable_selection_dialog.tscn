@@ -33,15 +33,22 @@ text = "Prototype:"
 
 [node name="Prototype" type="LineEdit" parent="HBox/Simple"]
 layout_mode = 2
-text = "func callable(fsm: FiniteStateMachine, state: StringName)"
-editable = false
 
 [node name="ScriptLabel" type="Label" parent="HBox/Simple"]
 layout_mode = 2
 text = "Connect to Script:"
 
-[node name="Filter" type="LineEdit" parent="HBox/Simple"]
+[node name="HBox" type="HBoxContainer" parent="HBox/Simple"]
 layout_mode = 2
+
+[node name="Filter" type="LineEdit" parent="HBox/Simple/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Source" type="Button" parent="HBox/Simple/HBox"]
+visible = false
+layout_mode = 2
+text = " Go to Source "
 
 [node name="SceneTree" type="Tree" parent="HBox/Simple"]
 layout_mode = 2
@@ -50,6 +57,8 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_constants/draw_guides = 0
 theme_override_constants/draw_relationship_lines = 1
 columns = 2
+allow_reselect = true
+select_mode = 1
 
 [node name="ReceiverLabel" type="Label" parent="HBox/Simple"]
 layout_mode = 2
@@ -71,3 +80,6 @@ icon = ExtResource("2_srxln")
 [node name="Advanced" type="VBoxContainer" parent="HBox"]
 visible = false
 layout_mode = 2
+
+[connection signal="text_changed" from="HBox/Simple/HBox/Filter" to="." method="_on_filter_changed"]
+[connection signal="pressed" from="HBox/Simple/HBox/Source" to="." method="_on_source_pressed"]
