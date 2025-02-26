@@ -221,14 +221,14 @@ class State extends RefCounted:
 
 	func enter() -> void:
 		for cb in cb_enter:
-			cb.call(host, self)
+			cb.call(host, name)
 
 
 	func stay() -> void:
 		for cb in cb_stay:
-			cb.call(host, self)
+			cb.call(host, name)
 
 
 	func exit() -> void:
 		for cb in cb_exit:
-			cb.call(host, self)
+			cb.call(host, name)
