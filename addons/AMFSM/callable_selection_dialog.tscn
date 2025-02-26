@@ -1,14 +1,15 @@
-[gd_scene load_steps=3 format=3 uid="uid://b3l7quqlx1vvo"]
+[gd_scene load_steps=4 format=3 uid="uid://b3l7quqlx1vvo"]
 
 [ext_resource type="Script" path="res://addons/AMFSM/callable_selection_dialog.gd" id="1_jp6f5"]
 [ext_resource type="Texture2D" uid="uid://bvougical7gbp" path="res://addons/AMFSM/icons/Pick.svg" id="2_srxln"]
+[ext_resource type="Texture2D" uid="uid://be0kwqe7dypu6" path="res://addons/AMFSM/icons/Search.svg" id="3_iv5k0"]
 
 [node name="CallableSelectionDialog" type="ConfirmationDialog"]
 auto_translate_mode = 1
-title = "Select Callable"
+title = "Select Method"
 initial_position = 4
-size = Vector2i(640, 640)
-visible = true
+size = Vector2i(480, 640)
+min_size = Vector2i(480, 512)
 ok_button_text = "Select"
 script = ExtResource("1_jp6f5")
 
@@ -46,7 +47,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Source" type="Button" parent="HBox/Simple/HBox"]
-visible = false
 layout_mode = 2
 text = " Go to Source "
 
@@ -81,5 +81,47 @@ icon = ExtResource("2_srxln")
 visible = false
 layout_mode = 2
 
+[node name="NodeCallableDialog" type="ConfirmationDialog" parent="."]
+title = "Select Method From list"
+initial_position = 4
+size = Vector2i(480, 512)
+min_size = Vector2i(360, 480)
+ok_button_text = "Select"
+
+[node name="VBox" type="VBoxContainer" parent="NodeCallableDialog"]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 352.0
+offset_bottom = 463.0
+
+[node name="Filter" type="LineEdit" parent="NodeCallableDialog/VBox"]
+layout_mode = 2
+right_icon = ExtResource("3_iv5k0")
+
+[node name="CallableList" type="Tree" parent="NodeCallableDialog/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+allow_reselect = true
+hide_root = true
+
+[node name="ScriptOnly" type="CheckButton" parent="NodeCallableDialog/VBox"]
+visible = false
+layout_mode = 2
+button_pressed = true
+text = "Script Methods Only"
+alignment = 2
+
+[node name="CompatibleOnly" type="CheckButton" parent="NodeCallableDialog/VBox"]
+visible = false
+layout_mode = 2
+disabled = true
+button_pressed = true
+text = "Compatible Methods Only"
+alignment = 2
+
+[connection signal="confirmed" from="." to="." method="_on_method_confirmed"]
 [connection signal="text_changed" from="HBox/Simple/HBox/Filter" to="." method="_on_filter_changed"]
 [connection signal="pressed" from="HBox/Simple/HBox/Source" to="." method="_on_source_pressed"]
+[connection signal="item_selected" from="HBox/Simple/SceneTree" to="." method="_on_method_node_selected"]
+[connection signal="pressed" from="HBox/Simple/Receiver/Pick" to="." method="_on_pick_pressed"]
+[connection signal="confirmed" from="NodeCallableDialog" to="." method="_on_callable_confirmed"]

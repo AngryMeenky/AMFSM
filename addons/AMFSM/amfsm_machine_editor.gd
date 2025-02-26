@@ -159,3 +159,13 @@ func _on_request_add_transition(state: AmfsmStateEditor, trigger: StringName, ta
 				transitions[trigger] = target
 				emit_changed(get_edited_property(), raw)
 			break
+
+
+func _on_callable_selected(node: Node, method: String) -> void:
+	var fsm := get_edited_object() as FiniteStateMachine
+	var resolve := fsm.get_node_or_null(fsm.resolve_root)
+	if resolve != null:
+		print("%s:%s" % [resolve.get_path_to(node), method])
+		# TODO: jump to the selected method and make it if necessary
+	else:
+		printerr("Unable to find the resolve root: %s" % fsm.resolve_root)

@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://dmwp7qah7jmu1"]
+[gd_scene load_steps=4 format=3 uid="uid://dmwp7qah7jmu1"]
 
 [ext_resource type="Script" path="res://addons/AMFSM/amfsm_machine_editor.gd" id="1_sebgw"]
 [ext_resource type="Texture2D" uid="uid://h4ii38qx5cii" path="res://addons/AMFSM/icons/Add.svg" id="2_dar12"]
+[ext_resource type="PackedScene" uid="uid://b3l7quqlx1vvo" path="res://addons/AMFSM/callable_selection_dialog.tscn" id="3_ynbem"]
 
 [node name="AmfsmMachineEditor" type="EditorProperty"]
 offset_right = 387.0
@@ -51,6 +52,9 @@ layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "State Name"
 
+[node name="CallableSelectionDialog" parent="." instance=ExtResource("3_ynbem")]
+
 [connection signal="pressed" from="Activator" to="." method="_on_activator_pressed"]
 [connection signal="pressed" from="BottomEditor/VBox/HBox/NewState" to="." method="_on_new_state_pressed"]
 [connection signal="text_changed" from="BottomEditor/VBox/HBox/NewName" to="." method="_on_new_name_changed"]
+[connection signal="callable_selected" from="CallableSelectionDialog" to="." method="_on_callable_selected"]
