@@ -92,6 +92,9 @@ func set_scene_root(scene: Node, fsm: FiniteStateMachine) -> void:
 		shadow_dom.set_icon(1,EditorInterface.get_editor_theme().get_icon(&"Script", &"EditorIcons"))
 		if scene == fsm:
 			source_node = shadow_dom
+	else:
+		shadow_dom.set_selectable(0, false)
+		shadow_dom.set_selectable(1, false)
 	for child in scene.get_children():
 		_add_child_to_tree(shadow_dom, child, fsm)
 
@@ -122,6 +125,9 @@ func _add_child_to_tree(parent: TreeItem, child: Node, fsm: FiniteStateMachine) 
 		item.set_icon(1, _get_icon(&"Script"))
 		if child == fsm:
 			source_node = item
+	else:
+		item.set_selectable(0, false)
+		item.set_selectable(1, false)
 	for grandchild in child.get_children():
 		_add_child_to_tree(item, grandchild, fsm)
 
@@ -181,16 +187,30 @@ func _on_source_pressed() -> void:
 func _on_filter_changed(new_text: String) -> void:
 	if new_text.is_empty():
 		shadow_dom.set_collapsed_recursive(false)
+		_set_visible_recursive(shadow_dom, true)
 	else:
 		shadow_dom.set_collapsed_recursive(true)
-		_filter_tree(shadow_dom, new_text)
+		shadow_dom.visible = _filter_tree(shadow_dom, new_text) or shadow_dom.get_text(0).containsn(new_text)
 
 
-func _filter_tree(root: TreeItem, filter: String) -> void:
+func _set_visible_recursive(root: TreeItem, vis: bool) -> void:
+	root.visible = vis
+	for branch in root.get_children():
+		_set_visible_recursive(branch, vis)
+
+
+func _filter_tree(root: TreeItem, filter: String) -> bool:
+	var result := false
 	for branch in root.get_children():
 		if branch.get_text(0).containsn(filter):
 			root.uncollapse_tree() # make sure this is selectable in the tree view
-		_filter_tree(branch, filter)
+			branch.visible = true
+			result = true
+			_filter_tree(branch, filter)
+		else:
+			branch.visible = _filter_tree(branch, filter)
+			result = branch.visible or result
+	return result
 
 
 func _on_pick_pressed() -> void:
@@ -259,3 +279,15 @@ func _on_callable_confirmed() -> void:
 func _on_method_confirmed() -> void:
 	if method_node != null and not receiver.text.is_empty():
 		callable_selected.emit(method_node, receiver.text)
+
+
+func _on_method_filter_changed(new_text: String) -> void:
+	print("Filter: ", new_text)
+	var item := ($NodeCallableDialog/VBox/CallableList as Tree).get_root()
+	if new_text.is_empty():
+		item.set_collapsed_recursive(false)
+		for child in item.get_children():
+			_set_visible_recursive(child, true)
+	else:
+		item.set_collapsed_recursive(true)
+		_filter_tree(item, new_text)

@@ -165,7 +165,32 @@ func _on_callable_selected(node: Node, method: String) -> void:
 	var fsm := get_edited_object() as FiniteStateMachine
 	var resolve := fsm.get_node_or_null(fsm.resolve_root)
 	if resolve != null:
-		print("%s:%s" % [resolve.get_path_to(node), method])
-		# TODO: jump to the selected method and make it if necessary
+		var script = node.get_script()
+		if script != null:
+			var path := NodePath("%s:%s" % [resolve.get_path_to(node), method])
+			EditorInterface.edit_script(script)
+			var editor := EditorInterface.get_script_editor().get_current_editor()
+			if not _has_method(script, method):
+				var code: CodeEdit = editor.get_base_editor()
+				var line := code.get_line_count()
+				code.deselect()
+				code.insert_text(
+					"\n\nfunc %s(fsm: FiniteStateMachine, state: StringName) -> void:\n\tpass\n" % method,
+					 line - 1,
+					 0
+				)
+				code.set_caret_line(line + 2)
+				#TODO: force the saving and reloading of the script
+			else:
+				editor.go_to_method.emit(script, method)
+		else:
+			printerr("Selected node does not have an attached script: %s" % node.get_path())
 	else:
 		printerr("Unable to find the resolve root: %s" % fsm.resolve_root)
+
+
+func _has_method(script: Script, method: String) -> bool:
+	for proto in script.get_script_method_list():
+		if proto["name"] == method:
+			return true
+	return false

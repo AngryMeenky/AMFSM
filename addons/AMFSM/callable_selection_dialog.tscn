@@ -125,3 +125,4 @@ alignment = 2
 [connection signal="item_selected" from="HBox/Simple/SceneTree" to="." method="_on_method_node_selected"]
 [connection signal="pressed" from="HBox/Simple/Receiver/Pick" to="." method="_on_pick_pressed"]
 [connection signal="confirmed" from="NodeCallableDialog" to="." method="_on_callable_confirmed"]
+[connection signal="text_changed" from="NodeCallableDialog/VBox/Filter" to="." method="_on_method_filter_changed"]
