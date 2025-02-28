@@ -15,6 +15,7 @@ var in_order: Array[StringName] = []
 var alphabetical: Array[StringName] = []
 
 
+
 func _ready() -> void:
 	add_focusable($Activator)
 	add_focusable(add_new_state)
@@ -180,9 +181,11 @@ func _on_callable_selected(node: Node, method: String) -> void:
 					 0
 				)
 				code.set_caret_line(line + 2)
-				#TODO: force the saving and reloading of the script
+				EditorInterface.save_scene()
+				script.reload(true)
 			else:
 				editor.go_to_method.emit(script, method)
+			# TODO: add the node path to the list of callbacks
 		else:
 			printerr("Selected node does not have an attached script: %s" % node.get_path())
 	else:
