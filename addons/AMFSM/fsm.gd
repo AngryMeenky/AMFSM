@@ -124,8 +124,10 @@ func reset() -> void:
 
 
 func _resolve_callback(np: NodePath) -> Callable:
-	print(np)
-	return Callable()
+	if np == ^"":
+		return Callable()
+	assert(np.get_subname_count() == 1, "NodePath only specifies a Node: %s" % np)
+	return Callable(get_node(resolve_root).get_node(np), np.get_subname(0))
 
 
 func unpack(root: Node, data: Dictionary) -> void:
@@ -154,14 +156,15 @@ func unpack(root: Node, data: Dictionary) -> void:
 
 
 class State extends RefCounted:
+	signal on_enter(fsm: FiniteStateMachine, state: StringName)
+	signal on_stay(fsm: FiniteStateMachine, state: StringName)
+	signal on_exit(fsm: FiniteStateMachine, state: StringName)
+
 	var name := &""
 	var incoming := {}
 	var transitions := {}
 	var removable := true
 	var host: FiniteStateMachine = null
-	var cb_enter: Array[Callable] = []
-	var cb_stay:  Array[Callable] = []
-	var cb_exit:  Array[Callable] = []
 
 
 	static func make(parent: FiniteStateMachine, name: StringName) -> State:
@@ -178,20 +181,20 @@ class State extends RefCounted:
 
 	func add_callbacks(enter: Callable, stay := Callable(), exit := Callable()) -> void:
 		if enter.is_valid():
-			cb_enter.append(enter)
+			on_enter.connect(enter)
 		if stay.is_valid():
-			cb_stay.append(stay)
+			on_stay.connect(stay)
 		if exit.is_valid():
-			cb_exit.append(exit)
+			on_exit.connect(exit)
 
 
 	func remove_callbacks(enter: Callable, stay := Callable(), exit := Callable()) -> void:
 		if enter.is_valid():
-			cb_enter.erase(enter)
+			on_enter.disconnect(enter)
 		if stay.is_valid():
-			cb_stay.erase(stay)
+			on_stay.disconnect(stay)
 		if exit.is_valid():
-			cb_exit.erase(exit)
+			on_exit.disconnect(exit)
 
 
 	func add_transition(trigger: StringName, state: StringName) -> void:
@@ -220,15 +223,12 @@ class State extends RefCounted:
 
 
 	func enter() -> void:
-		for cb in cb_enter:
-			cb.call(host, name)
+		on_enter.emit(host, name)
 
 
 	func stay() -> void:
-		for cb in cb_stay:
-			cb.call(host, name)
+		on_stay.emit(host, name)
 
 
 	func exit() -> void:
-		for cb in cb_exit:
-			cb.call(host, name)
+		on_exit.emit(host, name)
