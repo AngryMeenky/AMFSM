@@ -20,19 +20,6 @@ size_flags_horizontal = 3
 [node name="VBox" type="VBoxContainer" parent="BottomEditor"]
 layout_mode = 2
 
-[node name="Stats" type="HBoxContainer" parent="BottomEditor/VBox"]
-layout_mode = 2
-
-[node name="SizeLabel" type="Label" parent="BottomEditor/VBox/Stats"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Size:"
-
-[node name="SizeDisplay" type="Label" parent="BottomEditor/VBox/Stats"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "0"
-
 [node name="States" type="VBoxContainer" parent="BottomEditor/VBox"]
 layout_mode = 2
 

@@ -1,103 +1,235 @@
-[gd_scene load_steps=5 format=3 uid="uid://chpk77lbgl43x"]
+[gd_scene load_steps=13 format=3 uid="uid://chpk77lbgl43x"]
 
+[ext_resource type="Theme" uid="uid://ditmlsqklk8y1" path="res://addons/AMFSM/amfsm_section_theme.tres" id="1_4c4xc"]
 [ext_resource type="Script" path="res://addons/AMFSM/amfsm_state_editor.gd" id="1_sebgw"]
 [ext_resource type="Texture2D" uid="uid://h4ii38qx5cii" path="res://addons/AMFSM/icons/Add.svg" id="2_dar12"]
-[ext_resource type="Texture2D" uid="uid://c5xd34ulnqt0g" path="res://addons/AMFSM/icons/TripleBar.svg" id="2_ruhic"]
+[ext_resource type="PackedScene" uid="uid://bhyxhd6ph34ac" path="res://addons/AMFSM/amfsm_section.tscn" id="2_js514"]
+[ext_resource type="Texture2D" uid="uid://b80o3cjswonxh" path="res://addons/AMFSM/icons/CodeFoldDownArrow.svg" id="3_eeg4d"]
 [ext_resource type="Texture2D" uid="uid://bkvjm8g1ad2al" path="res://addons/AMFSM/icons/Remove.svg" id="3_pagi2"]
+[ext_resource type="Texture2D" uid="uid://csn5mevk1osgl" path="res://addons/AMFSM/icons/CodeFoldedRightArrow.svg" id="4_ncu1d"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8u415"]
+bg_color = Color(1, 1, 1, 0.0627451)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0n0h7"]
+bg_color = Color(1, 1, 1, 0.12549)
+
+[sub_resource type="Theme" id="Theme_gnejm"]
+resource_local_to_scene = true
+CheckButton/icons/checked = ExtResource("3_eeg4d")
+CheckButton/icons/checked_disabled = ExtResource("3_eeg4d")
+CheckButton/icons/checked_disabled_mirrored = ExtResource("3_eeg4d")
+CheckButton/icons/checked_mirrored = ExtResource("3_eeg4d")
+CheckButton/icons/unchecked = ExtResource("4_ncu1d")
+CheckButton/icons/unchecked_disabled = ExtResource("4_ncu1d")
+CheckButton/icons/unchecked_disabled_mirrored = ExtResource("4_ncu1d")
+CheckButton/icons/unchecked_mirrored = ExtResource("4_ncu1d")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_8u415")
+PanelContainerHighlight/base_type = &"PanelContainer"
+PanelContainerHighlight/styles/panel = SubResource("StyleBoxFlat_0n0h7")
+
+[sub_resource type="Theme" id="Theme_khhey"]
+resource_local_to_scene = true
+CheckButton/icons/checked = ExtResource("3_eeg4d")
+CheckButton/icons/checked_disabled = ExtResource("3_eeg4d")
+CheckButton/icons/checked_disabled_mirrored = ExtResource("3_eeg4d")
+CheckButton/icons/checked_mirrored = ExtResource("3_eeg4d")
+CheckButton/icons/unchecked = ExtResource("4_ncu1d")
+CheckButton/icons/unchecked_disabled = ExtResource("4_ncu1d")
+CheckButton/icons/unchecked_disabled_mirrored = ExtResource("4_ncu1d")
+CheckButton/icons/unchecked_mirrored = ExtResource("4_ncu1d")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_8u415")
+PanelContainerHighlight/base_type = &"PanelContainer"
+PanelContainerHighlight/styles/panel = SubResource("StyleBoxFlat_0n0h7")
+
+[sub_resource type="Theme" id="Theme_xtmr4"]
+resource_local_to_scene = true
+CheckButton/icons/checked = ExtResource("3_eeg4d")
+CheckButton/icons/checked_disabled = ExtResource("3_eeg4d")
+CheckButton/icons/checked_disabled_mirrored = ExtResource("3_eeg4d")
+CheckButton/icons/checked_mirrored = ExtResource("3_eeg4d")
+CheckButton/icons/unchecked = ExtResource("4_ncu1d")
+CheckButton/icons/unchecked_disabled = ExtResource("4_ncu1d")
+CheckButton/icons/unchecked_disabled_mirrored = ExtResource("4_ncu1d")
+CheckButton/icons/unchecked_mirrored = ExtResource("4_ncu1d")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_8u415")
+PanelContainerHighlight/base_type = &"PanelContainer"
+PanelContainerHighlight/styles/panel = SubResource("StyleBoxFlat_0n0h7")
 
 [node name="AmfsmStateEditor" type="VBoxContainer"]
 offset_right = 318.0
 offset_bottom = 182.0
+theme = ExtResource("1_4c4xc")
 script = ExtResource("1_sebgw")
 
-[node name="HBox" type="HBoxContainer" parent="."]
+[node name="StateHeader" parent="." instance=ExtResource("2_js514")]
+layout_mode = 2
+theme = SubResource("Theme_gnejm")
+section_name = "State Name"
+
+[node name="State" type="MarginContainer" parent="."]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBox" type="VBoxContainer" parent="State"]
 layout_mode = 2
 
-[node name="Panel" type="PanelContainer" parent="HBox"]
-custom_minimum_size = Vector2(31, 0)
+[node name="HBox" type="HBoxContainer" parent="State/VBox"]
 layout_mode = 2
+alignment = 2
 
-[node name="Handle" type="TextureRect" parent="HBox/Panel"]
+[node name="Remove" type="Button" parent="State/VBox/HBox"]
 layout_mode = 2
-texture = ExtResource("2_ruhic")
-
-[node name="Index" type="Label" parent="HBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "0"
-
-[node name="Toggle" type="Button" parent="HBox"]
-layout_mode = 2
-text = "State Name"
-
-[node name="Remove" type="Button" parent="HBox"]
-layout_mode = 2
+text = "Remove"
 icon = ExtResource("3_pagi2")
+icon_alignment = 2
 
-[node name="VBox" type="VBoxContainer" parent="."]
+[node name="TransitionsHeader" parent="State/VBox" instance=ExtResource("2_js514")]
+layout_mode = 2
+theme = SubResource("Theme_khhey")
+section_name = "Transitions"
+
+[node name="Transitions" type="MarginContainer" parent="State/VBox"]
 visible = false
 layout_mode = 2
 
-[node name="Transitions" type="GridContainer" parent="VBox"]
+[node name="VBox" type="VBoxContainer" parent="State/VBox/Transitions"]
+layout_mode = 2
+
+[node name="Transitions" type="GridContainer" parent="State/VBox/Transitions/VBox"]
 layout_mode = 2
 columns = 3
 
-[node name="Triggers" type="Label" parent="VBox/Transitions"]
+[node name="Triggers" type="Label" parent="State/VBox/Transitions/VBox/Transitions"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Trigger Input"
 
-[node name="Targets" type="Label" parent="VBox/Transitions"]
+[node name="Targets" type="Label" parent="State/VBox/Transitions/VBox/Transitions"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Target State"
 
-[node name="LeftIntentionallyBlank" type="Label" parent="VBox/Transitions"]
+[node name="LeftIntentionallyBlank" type="Label" parent="State/VBox/Transitions/VBox/Transitions"]
 layout_mode = 2
 
-[node name="AddTransition" type="MarginContainer" parent="VBox"]
+[node name="AddTransition" type="MarginContainer" parent="State/VBox/Transitions/VBox"]
 layout_mode = 2
 
-[node name="VBox" type="VBoxContainer" parent="VBox/AddTransition"]
+[node name="VBox" type="VBoxContainer" parent="State/VBox/Transitions/VBox/AddTransition"]
 layout_mode = 2
 
-[node name="Heading" type="Label" parent="VBox/AddTransition/VBox"]
+[node name="Heading" type="Label" parent="State/VBox/Transitions/VBox/AddTransition/VBox"]
 layout_mode = 2
 text = "Create New Transition"
 horizontal_alignment = 1
 
-[node name="Create" type="GridContainer" parent="VBox/AddTransition/VBox"]
+[node name="Create" type="GridContainer" parent="State/VBox/Transitions/VBox/AddTransition/VBox"]
 layout_mode = 2
 columns = 2
 
-[node name="TriggerLabel" type="Label" parent="VBox/AddTransition/VBox/Create"]
+[node name="TriggerLabel" type="Label" parent="State/VBox/Transitions/VBox/AddTransition/VBox/Create"]
 layout_mode = 2
 text = "Trigger Input:"
 
-[node name="Trigger" type="LineEdit" parent="VBox/AddTransition/VBox/Create"]
+[node name="Trigger" type="LineEdit" parent="State/VBox/Transitions/VBox/AddTransition/VBox/Create"]
 layout_mode = 2
 placeholder_text = "Trigger Text"
 
-[node name="TargetLabel" type="Label" parent="VBox/AddTransition/VBox/Create"]
+[node name="TargetLabel" type="Label" parent="State/VBox/Transitions/VBox/AddTransition/VBox/Create"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Target State:"
 
-[node name="Target" type="OptionButton" parent="VBox/AddTransition/VBox/Create"]
+[node name="Target" type="OptionButton" parent="State/VBox/Transitions/VBox/AddTransition/VBox/Create"]
 layout_mode = 2
 size_flags_horizontal = 3
 allow_reselect = true
 
-[node name="AddNew" type="Button" parent="VBox/AddTransition/VBox"]
+[node name="AddNew" type="Button" parent="State/VBox/Transitions/VBox/AddTransition/VBox"]
 layout_mode = 2
 size_flags_horizontal = 4
 disabled = true
 text = "Add Transition"
 icon = ExtResource("2_dar12")
 
-[connection signal="pressed" from="HBox/Toggle" to="." method="_on_toggle_pressed"]
-[connection signal="pressed" from="HBox/Remove" to="." method="_on_remove_state_pressed"]
-[connection signal="text_changed" from="VBox/AddTransition/VBox/Create/Trigger" to="." method="_on_trigger_changed"]
-[connection signal="text_submitted" from="VBox/AddTransition/VBox/Create/Trigger" to="." method="_on_trigger_submitted"]
-[connection signal="item_selected" from="VBox/AddTransition/VBox/Create/Target" to="." method="_on_target_selected"]
-[connection signal="pressed" from="VBox/AddTransition/VBox/AddNew" to="." method="_on_add_new_pressed"]
+[node name="CallbacksHeader" parent="State/VBox" instance=ExtResource("2_js514")]
+layout_mode = 2
+theme = SubResource("Theme_xtmr4")
+section_name = "Callbacks"
+
+[node name="Callbacks" type="MarginContainer" parent="State/VBox"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBox" type="VBoxContainer" parent="State/VBox/Callbacks"]
+layout_mode = 2
+
+[node name="Callbacks" type="Tree" parent="State/VBox/Callbacks/VBox"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+size_flags_vertical = 3
+columns = 2
+hide_folding = true
+enable_recursive_folding = false
+hide_root = true
+select_mode = 1
+
+[node name="AddCallback" type="MarginContainer" parent="State/VBox/Callbacks/VBox"]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="State/VBox/Callbacks/VBox/AddCallback"]
+layout_mode = 2
+
+[node name="Header" type="Label" parent="State/VBox/Callbacks/VBox/AddCallback/VBox"]
+layout_mode = 2
+text = "Add Callback"
+horizontal_alignment = 1
+
+[node name="Create" type="GridContainer" parent="State/VBox/Callbacks/VBox/AddCallback/VBox"]
+layout_mode = 2
+columns = 2
+
+[node name="TransitionLabel" type="Label" parent="State/VBox/Callbacks/VBox/AddCallback/VBox/Create"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Transition:"
+
+[node name="TransitionList" type="OptionButton" parent="State/VBox/Callbacks/VBox/AddCallback/VBox/Create"]
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 0
+item_count = 3
+popup/item_0/text = "enter"
+popup/item_1/text = "stay"
+popup/item_1/id = 1
+popup/item_2/text = "exit"
+popup/item_2/id = 2
+
+[node name="CallableLabel" type="Label" parent="State/VBox/Callbacks/VBox/AddCallback/VBox/Create"]
+layout_mode = 2
+text = "Callable:"
+
+[node name="CallableButton" type="Button" parent="State/VBox/Callbacks/VBox/AddCallback/VBox/Create"]
+layout_mode = 2
+text = "Callable"
+
+[node name="AddNew" type="Button" parent="State/VBox/Callbacks/VBox/AddCallback/VBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+disabled = true
+text = "Add Callback"
+icon = ExtResource("2_dar12")
+
+[connection signal="toggled" from="StateHeader" to="." method="_on_state_toggled"]
+[connection signal="pressed" from="State/VBox/HBox/Remove" to="." method="_on_remove_state_pressed"]
+[connection signal="toggled" from="State/VBox/TransitionsHeader" to="." method="_on_transitions_toggled"]
+[connection signal="text_changed" from="State/VBox/Transitions/VBox/AddTransition/VBox/Create/Trigger" to="." method="_on_trigger_changed"]
+[connection signal="text_submitted" from="State/VBox/Transitions/VBox/AddTransition/VBox/Create/Trigger" to="." method="_on_trigger_submitted"]
+[connection signal="item_selected" from="State/VBox/Transitions/VBox/AddTransition/VBox/Create/Target" to="." method="_on_target_selected"]
+[connection signal="pressed" from="State/VBox/Transitions/VBox/AddTransition/VBox/AddNew" to="." method="_on_add_new_pressed"]
+[connection signal="toggled" from="State/VBox/CallbacksHeader" to="." method="_on_callbacks_toggled"]
+[connection signal="pressed" from="State/VBox/Callbacks/VBox/AddCallback/VBox/Create/CallableButton" to="." method="_on_callable_select_pressed"]
+[connection signal="pressed" from="State/VBox/Callbacks/VBox/AddCallback/VBox/AddNew" to="." method="_on_add_new_callback_pressed"]

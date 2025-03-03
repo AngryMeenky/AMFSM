@@ -8,11 +8,12 @@ static var STATE_EDITOR := preload("res://addons/AMFSM/amfsm_state_editor.tscn")
 @onready var states := $BottomEditor/VBox/States
 @onready var add_new_state := $BottomEditor/VBox/HBox/NewState
 @onready var new_state_name := $BottomEditor/VBox/HBox/NewName
-@onready var size_display := $BottomEditor/VBox/Stats/SizeDisplay
+@onready var callback_dialog := $CallableSelectionDialog
 
 var by_name := {}
 var in_order: Array[StringName] = []
 var alphabetical: Array[StringName] = []
+var edited_state: AmfsmStateEditor = null
 
 
 
@@ -30,7 +31,6 @@ func _get_edited_value() -> Array[Dictionary]:
 func _update_property():
 	var raw_states: Array[Dictionary] = _get_edited_value()
 	var new_order: Array[StringName] = []
-	size_display.text = str(raw_states.size())
 
 	# run through each state to apply possible updates
 	for state in raw_states:
@@ -51,7 +51,6 @@ func _update_property():
 		for idx in new_order.size():
 			var state: AmfsmStateEditor = by_name[new_order[idx]]
 			state.set_available_states(alphabetical)
-			state.set_index(idx)
 			states.move_child(state, idx)
 
 		# remove the superfluous children
@@ -61,6 +60,9 @@ func _update_property():
 			state.request_remove_state.disconnect(_on_request_remove_state)
 			state.request_add_transition.disconnect(_on_request_add_transition)
 			state.request_remove_transition.disconnect(_on_request_remove_transition)
+			state.request_add_callback.disconnect(_on_request_add_callback)
+			state.request_remove_callback.disconnect(_on_request_remove_callback)
+			state.request_select_callback.disconnect(_on_request_select_callback)
 			states.remove_child(state)
 			state.queue_free()
 		in_order = new_order # record the change
@@ -69,15 +71,18 @@ func _update_property():
 func _build_state(raw: Dictionary) -> AmfsmStateEditor:
 	var state := STATE_EDITOR.instantiate()
 	states.add_child(state) # needs to be in the tree for node resolution to have occured
-	add_focusable(state.activator)
 	add_focusable(state.trigger)
 	add_focusable(state.targets)
-	add_focusable(state.add_new)
+	add_focusable(state.add_new_transition)
+	add_focusable(state.transitions)
 	state.set_state_name(raw["name"])
 	_update_state(state, raw)
 	state.request_remove_state.connect(_on_request_remove_state)
 	state.request_add_transition.connect(_on_request_add_transition)
 	state.request_remove_transition.connect(_on_request_remove_transition)
+	state.request_add_callback.connect(_on_request_add_callback)
+	state.request_remove_callback.connect(_on_request_remove_callback)
+	state.request_select_callback.connect(_on_request_select_callback)
 
 	return state
 
@@ -162,6 +167,19 @@ func _on_request_add_transition(state: AmfsmStateEditor, trigger: StringName, ta
 			break
 
 
+func _on_request_add_callback(state: AmfsmStateEditor, trigger: StringName, path: NodePath):
+	pass
+
+
+func _on_request_remove_callback(state: AmfsmStateEditor, trigger: StringName, path: NodePath):
+	pass
+
+
+func _on_request_select_callback(state: AmfsmStateEditor, action: StringName):
+	edited_state = state
+	callback_dialog.activate(get_edited_object(), action, state.get_state_name(), EditorInterface.get_edited_scene_root())
+
+
 func _on_callable_selected(node: Node, method: String) -> void:
 	var fsm := get_edited_object() as FiniteStateMachine
 	var resolve := fsm.get_node_or_null(fsm.resolve_root)
@@ -186,6 +204,7 @@ func _on_callable_selected(node: Node, method: String) -> void:
 			else:
 				editor.go_to_method.emit(script, method)
 			# TODO: add the node path to the list of callbacks
+			edited_state.callback_selected(path)
 		else:
 			printerr("Selected node does not have an attached script: %s" % node.get_path())
 	else:

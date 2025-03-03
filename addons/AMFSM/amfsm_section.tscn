@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://bhyxhd6ph34ac"]
+
+[ext_resource type="Script" path="res://addons/AMFSM/amfsm_section.gd" id="1_q25ef"]
+[ext_resource type="Theme" uid="uid://ditmlsqklk8y1" path="res://addons/AMFSM/amfsm_section_theme.tres" id="2_gao1m"]
+
+[node name="AmfsmSectionHeader" type="PanelContainer"]
+offset_right = 85.0
+offset_bottom = 23.0
+theme = ExtResource("2_gao1m")
+script = ExtResource("1_q25ef")
+
+[node name="Header" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="CheckButton" type="CheckButton" parent="Header"]
+layout_mode = 2
+focus_mode = 0
+
+[node name="Label" type="Label" parent="Header"]
+layout_mode = 2
+text = "Section"
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="toggled" from="Header/CheckButton" to="." method="_on_toggled"]

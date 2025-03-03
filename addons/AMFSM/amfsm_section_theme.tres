@@ -1,0 +1,25 @@
+[gd_resource type="Theme" load_steps=5 format=3 uid="uid://ditmlsqklk8y1"]
+
+[ext_resource type="Texture2D" uid="uid://b80o3cjswonxh" path="res://addons/AMFSM/icons/CodeFoldDownArrow.svg" id="1_vfqxa"]
+[ext_resource type="Texture2D" uid="uid://csn5mevk1osgl" path="res://addons/AMFSM/icons/CodeFoldedRightArrow.svg" id="2_6kfda"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8u415"]
+bg_color = Color(1, 1, 1, 0.0627451)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0n0h7"]
+bg_color = Color(1, 1, 1, 0.12549)
+
+[resource]
+resource_local_to_scene = true
+CheckButton/icons/checked = ExtResource("1_vfqxa")
+CheckButton/icons/checked_disabled = ExtResource("1_vfqxa")
+CheckButton/icons/checked_disabled_mirrored = ExtResource("1_vfqxa")
+CheckButton/icons/checked_mirrored = ExtResource("1_vfqxa")
+CheckButton/icons/unchecked = ExtResource("2_6kfda")
+CheckButton/icons/unchecked_disabled = ExtResource("2_6kfda")
+CheckButton/icons/unchecked_disabled_mirrored = ExtResource("2_6kfda")
+CheckButton/icons/unchecked_mirrored = ExtResource("2_6kfda")
+MarginContainer/constants/margin_left = 8
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_8u415")
+PanelContainerHighlight/base_type = &"PanelContainer"
+PanelContainerHighlight/styles/panel = SubResource("StyleBoxFlat_0n0h7")
