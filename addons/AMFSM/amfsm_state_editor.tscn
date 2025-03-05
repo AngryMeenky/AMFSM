@@ -231,5 +231,6 @@ icon = ExtResource("2_dar12")
 [connection signal="item_selected" from="State/VBox/Transitions/VBox/AddTransition/VBox/Create/Target" to="." method="_on_target_selected"]
 [connection signal="pressed" from="State/VBox/Transitions/VBox/AddTransition/VBox/AddNew" to="." method="_on_add_new_pressed"]
 [connection signal="toggled" from="State/VBox/CallbacksHeader" to="." method="_on_callbacks_toggled"]
+[connection signal="button_clicked" from="State/VBox/Callbacks/VBox/Callbacks" to="." method="_on_callbacks_button_clicked"]
 [connection signal="pressed" from="State/VBox/Callbacks/VBox/AddCallback/VBox/Create/CallableButton" to="." method="_on_callable_select_pressed"]
 [connection signal="pressed" from="State/VBox/Callbacks/VBox/AddCallback/VBox/AddNew" to="." method="_on_add_new_callback_pressed"]

@@ -89,14 +89,7 @@ func _build_state(raw: Dictionary) -> AmfsmStateEditor:
 
 func _update_state(state: AmfsmStateEditor, raw: Dictionary) -> void:
 	state.set_available_states(alphabetical)
-	var transitions: Dictionary = raw.get("transitions", {})
-	# ensure all the specified transitions are displayed
-	for trigger in transitions.keys():
-		state.add_transition(trigger, transitions[trigger])
-	# ensure that no unspecified transitions are displayed
-	for trigger in state.by_name.keys():
-		if trigger not in transitions:
-			state.remove_transition(trigger)
+	state.set_raw_state(raw)
 
 
 func _on_activator_pressed() -> void:
@@ -167,12 +160,33 @@ func _on_request_add_transition(state: AmfsmStateEditor, trigger: StringName, ta
 			break
 
 
-func _on_request_add_callback(state: AmfsmStateEditor, trigger: StringName, path: NodePath):
-	pass
+func _on_request_add_callback(state: AmfsmStateEditor, action: StringName, path: NodePath):
+	var state_name := state.get_state_name()
+	var raw: Array[Dictionary] = _get_edited_value()
+	for idx in raw.size():
+		if raw[idx]["name"] == state_name:
+			var raw_state := raw[idx].duplicate(true)
+			var callbacks: Array = raw_state.get_or_add(action, [])
+			if path not in callbacks:
+				raw = raw.duplicate()
+				raw[idx] = raw_state
+				callbacks.append(str(path))
+				emit_changed(get_edited_property(), raw)
 
 
-func _on_request_remove_callback(state: AmfsmStateEditor, trigger: StringName, path: NodePath):
-	pass
+func _on_request_remove_callback(state: AmfsmStateEditor, action: StringName, path: NodePath):
+	var state_name := state.get_state_name()
+	var raw: Array[Dictionary] = _get_edited_value()
+	for idx in raw.size():
+		if raw[idx]["name"] == state_name:
+			var raw_state := raw[idx].duplicate(true)
+			var callbacks: Array = raw_state.get(action, [])
+			var index := callbacks.find(str(path))
+			if index >= 0:
+				raw = raw.duplicate()
+				raw[idx] = raw_state
+				callbacks.remove_at(index)
+				emit_changed(get_edited_property(), raw)
 
 
 func _on_request_select_callback(state: AmfsmStateEditor, action: StringName):
@@ -199,11 +213,10 @@ func _on_callable_selected(node: Node, method: String) -> void:
 					 0
 				)
 				code.set_caret_line(line + 2)
-				EditorInterface.save_scene()
-				script.reload(true)
+				#EditorInterface.save_scene()
+				#script.reload(true)
 			else:
 				editor.go_to_method.emit(script, method)
-			# TODO: add the node path to the list of callbacks
 			edited_state.callback_selected(path)
 		else:
 			printerr("Selected node does not have an attached script: %s" % node.get_path())

@@ -25,6 +25,7 @@ signal request_remove_callback(state: AmfsmStateEditor, event: StringName, path:
 
 var by_name := {}
 var by_action := { "enter": {}, "stay": {}, "exit": {} }
+var raw_state := {}
 var state_name := &""
 var callable_path := ^""
 var callback_root: TreeItem = null
@@ -58,6 +59,37 @@ func set_state_name(_name: StringName) -> void:
 		_:
 			transition_add.visible = true
 			transition_list.visible = true
+
+
+func set_raw_state(raw: Dictionary) -> void:
+	raw_state = raw
+
+	var transitions: Dictionary = raw.get("transitions", {})
+	# ensure all the specified transitions are displayed
+	for trigger in transitions.keys():
+		add_transition(trigger, transitions[trigger])
+	# ensure that no unspecified transitions are displayed
+	for trigger in by_name.keys():
+		if trigger not in transitions:
+			remove_transition(trigger)
+
+	_update_callbacks(raw, &"enter")
+	_update_callbacks(raw, &"stay")
+	_update_callbacks(raw, &"exit")
+
+
+
+func get_raw_state() -> Dictionary:
+	return raw_state
+
+
+func _update_callbacks(raw: Dictionary, action: StringName) -> void:
+	var callbacks: Array = raw.get(action, [])
+	for callback in callbacks:
+		add_callback(action, callback)
+	for callback in by_action[action].keys():
+		if str(callback) not in callbacks:
+			remove_callback(action, callback)
 
 
 func callback_selected(path: NodePath) -> void:
@@ -126,7 +158,8 @@ func add_callback(event: StringName, callable: NodePath) -> void:
 		display = root.create_child()
 		# display.set_icon(0, null)
 		display.set_text(0, "%s::%s" % [ callable.get_concatenated_names(), callable.get_concatenated_subnames()])
-		display.set_button(1, 0, preload("res://addons/AMFSM/icons/Remove.svg"))
+		display.add_button(1, preload("res://addons/AMFSM/icons/Remove.svg"), -1, false, "Remove")
+		display.set_metadata(0, [ event, callable ])
 		dict[callable] = display
 
 
@@ -173,24 +206,28 @@ func _on_remove_state_pressed() -> void:
 
 
 func _on_state_toggled(expanded: bool) -> void:
-	prints("State:", expanded)
 	$State.visible = expanded
 
 
 func _on_transitions_toggled(expanded: bool) -> void:
-	prints("Transition:", expanded)
 	$State/VBox/Transitions.visible = expanded
 
 
 func _on_callbacks_toggled(expanded: bool) -> void:
-	prints("Callback:", expanded)
 	$State/VBox/Callbacks.visible = expanded
 
 
 func _on_add_new_callback_pressed() -> void:
 	request_add_callback.emit(self, transitions.get_item_metadata(transitions.selected)[0], callable_path)
+	callable_select.text = "Callable"
 	callable_path = ^""
 
 
 func _on_callable_select_pressed() -> void:
 	request_select_callback.emit(self, transitions.get_item_metadata(transitions.selected)[0])
+
+
+func _on_callbacks_button_clicked(item: TreeItem, _column: int, _id: int, mouse_button_index: int) -> void:
+	if mouse_button_index == MOUSE_BUTTON_LEFT:
+		var args: Array = item.get_metadata(0)
+		request_remove_callback.emit(self, args[0], args[1])

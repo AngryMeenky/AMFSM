@@ -140,15 +140,15 @@ func unpack(root: Node, data: Dictionary) -> void:
 		state.add_transition(trigger, transitions[trigger])
 
 	# connect all the callbacks
-	var enter: Array[NodePath] = data.get("enter", [] as Array[NodePath])
-	var stay:  Array[NodePath] = data.get("stay",  [] as Array[NodePath])
-	var exit:  Array[NodePath] = data.get("exit",  [] as Array[NodePath])
+	var enter: Array = data.get("enter", [])
+	var stay:  Array = data.get("stay",  [])
+	var exit:  Array = data.get("exit",  [])
 	var count: int = max(enter.size(), stay.size(), exit.size())
 	for idx in count:
 		state.add_callbacks(
-			_resolve_callback(enter[idx] if idx < enter.size() else ^""),
-			_resolve_callback(stay[idx]  if idx < stay.size()  else ^""),
-			_resolve_callback(exit[idx]  if idx < exit.size()  else ^"")
+			_resolve_callback(NodePath(enter[idx]) if idx < enter.size() else ^""),
+			_resolve_callback(NodePath(stay[idx])  if idx < stay.size()  else ^""),
+			_resolve_callback(NodePath(exit[idx])  if idx < exit.size()  else ^"")
 		)
 
 #func pack(root: Node, state: State) -> Dictionary:
