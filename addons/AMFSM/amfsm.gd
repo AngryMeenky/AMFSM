@@ -1,11 +1,11 @@
 @icon("res://addons/AMFSM/icons/FSM.svg")
 extends Node
-class_name FiniteStateMachine
+class_name AMFiniteStateMachine
 
 
-signal errored(fsm: FiniteStateMachine)
-signal completed(fsm: FiniteStateMachine)
-signal state_changed(fsm: FiniteStateMachine, from: StringName, to: StringName)
+signal errored(fsm: AMFiniteStateMachine)
+signal completed(fsm: AMFiniteStateMachine)
+signal state_changed(fsm: AMFiniteStateMachine, from: StringName, to: StringName)
 
 
 const START := &"Start"
@@ -157,18 +157,18 @@ func unpack(root: Node, data: Dictionary) -> void:
 
 
 class State extends RefCounted:
-	signal on_enter(fsm: FiniteStateMachine, state: StringName)
-	signal on_stay(fsm: FiniteStateMachine, state: StringName)
-	signal on_exit(fsm: FiniteStateMachine, state: StringName)
+	signal on_enter(fsm: AMFiniteStateMachine, state: StringName)
+	signal on_stay(fsm: AMFiniteStateMachine, state: StringName)
+	signal on_exit(fsm: AMFiniteStateMachine, state: StringName)
 
 	var name := &""
 	var incoming := {}
 	var transitions := {}
 	var removable := true
-	var host: FiniteStateMachine = null
+	var host: AMFiniteStateMachine = null
 
 
-	static func make(parent: FiniteStateMachine, name: StringName) -> State:
+	static func make(parent: AMFiniteStateMachine, name: StringName) -> State:
 		var state = State.new()
 		state.name = name
 		match name:

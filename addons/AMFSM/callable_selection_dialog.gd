@@ -10,7 +10,7 @@ const _PROTOS := {
 	"enter": {
 		"name": "enter",
 		"args": [
-			{"name": "fsm",  "type": TYPE_OBJECT, "class_name": "FiniteStateMachine"},
+			{"name": "fsm",  "type": TYPE_OBJECT, "class_name": "AMFiniteStateMachine"},
 			{"name": "state", "type": TYPE_STRING_NAME}
 		],
 		"return": { "type": TYPE_NIL }
@@ -18,7 +18,7 @@ const _PROTOS := {
 	"stay": {
 		"name": "stay",
 		"args": [
-			{"name": "fsm",  "type": TYPE_OBJECT, "class_name": "FiniteStateMachine"},
+			{"name": "fsm",  "type": TYPE_OBJECT, "class_name": "AMFiniteStateMachine"},
 			{"name": "state", "type": TYPE_STRING_NAME}
 		],
 		"return": { "type": TYPE_NIL }
@@ -26,7 +26,7 @@ const _PROTOS := {
 	"exit": {
 		"name": "exit",
 		"args": [
-			{"name": "fsm",  "type": TYPE_OBJECT, "class_name": "FiniteStateMachine"},
+			{"name": "fsm",  "type": TYPE_OBJECT, "class_name": "AMFiniteStateMachine"},
 			{"name": "state", "type": TYPE_STRING_NAME}
 		],
 		"return": { "type": TYPE_NIL }
@@ -62,7 +62,7 @@ var shadow_dom: TreeItem = null
 var source_node: TreeItem = null
 
 
-func activate(fsm: FiniteStateMachine, action: StringName, state: StringName, scene: Node) -> void:
+func activate(fsm: AMFiniteStateMachine, action: StringName, state: StringName, scene: Node) -> void:
 	set_callable_name("_on_%s_%s_%s" % [
 		fsm.name.to_snake_case(), action, state.to_snake_case()
 	])
@@ -76,7 +76,7 @@ func set_callable_name(callable_name: String) -> void:
 	receiver.text = callable_name
 
 
-func set_scene_root(scene: Node, fsm: FiniteStateMachine) -> void:
+func set_scene_root(scene: Node, fsm: AMFiniteStateMachine) -> void:
 	assert(scene != null, "Scene root must not be null")
 	scene_root = scene
 	method_node = scene
@@ -116,7 +116,7 @@ static func _get_icon(what: StringName) -> Texture2D:
 	return EditorInterface.get_editor_theme().get_icon(what, &"EditorIcons")
 
 
-func _add_child_to_tree(parent: TreeItem, child: Node, fsm: FiniteStateMachine) -> void:
+func _add_child_to_tree(parent: TreeItem, child: Node, fsm: AMFiniteStateMachine) -> void:
 	var item := parent.create_child()
 	item.set_metadata(0, child)
 	item.set_text(0, child.name)

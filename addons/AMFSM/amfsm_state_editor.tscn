@@ -1,11 +1,10 @@
-[gd_scene load_steps=13 format=3 uid="uid://chpk77lbgl43x"]
+[gd_scene load_steps=12 format=3 uid="uid://chpk77lbgl43x"]
 
 [ext_resource type="Theme" uid="uid://ditmlsqklk8y1" path="res://addons/AMFSM/amfsm_section_theme.tres" id="1_4c4xc"]
 [ext_resource type="Script" path="res://addons/AMFSM/amfsm_state_editor.gd" id="1_sebgw"]
 [ext_resource type="Texture2D" uid="uid://h4ii38qx5cii" path="res://addons/AMFSM/icons/Add.svg" id="2_dar12"]
 [ext_resource type="PackedScene" uid="uid://bhyxhd6ph34ac" path="res://addons/AMFSM/amfsm_section.tscn" id="2_js514"]
 [ext_resource type="Texture2D" uid="uid://b80o3cjswonxh" path="res://addons/AMFSM/icons/CodeFoldDownArrow.svg" id="3_eeg4d"]
-[ext_resource type="Texture2D" uid="uid://bkvjm8g1ad2al" path="res://addons/AMFSM/icons/Remove.svg" id="3_pagi2"]
 [ext_resource type="Texture2D" uid="uid://csn5mevk1osgl" path="res://addons/AMFSM/icons/CodeFoldedRightArrow.svg" id="4_ncu1d"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8u415"]
@@ -66,6 +65,7 @@ script = ExtResource("1_sebgw")
 layout_mode = 2
 theme = SubResource("Theme_gnejm")
 section_name = "State Name"
+allow_removal = true
 
 [node name="State" type="MarginContainer" parent="."]
 visible = false
@@ -75,20 +75,11 @@ size_flags_vertical = 3
 [node name="VBox" type="VBoxContainer" parent="State"]
 layout_mode = 2
 
-[node name="HBox" type="HBoxContainer" parent="State/VBox"]
-layout_mode = 2
-alignment = 2
-
-[node name="Remove" type="Button" parent="State/VBox/HBox"]
-layout_mode = 2
-text = "Remove"
-icon = ExtResource("3_pagi2")
-icon_alignment = 2
-
 [node name="TransitionsHeader" parent="State/VBox" instance=ExtResource("2_js514")]
 layout_mode = 2
 theme = SubResource("Theme_khhey")
 section_name = "Transitions"
+allow_removal = false
 
 [node name="Transitions" type="MarginContainer" parent="State/VBox"]
 visible = false
@@ -127,37 +118,33 @@ horizontal_alignment = 1
 
 [node name="Create" type="GridContainer" parent="State/VBox/Transitions/VBox/AddTransition/VBox"]
 layout_mode = 2
-columns = 2
-
-[node name="TriggerLabel" type="Label" parent="State/VBox/Transitions/VBox/AddTransition/VBox/Create"]
-layout_mode = 2
-text = "Trigger Input:"
+columns = 3
 
 [node name="Trigger" type="LineEdit" parent="State/VBox/Transitions/VBox/AddTransition/VBox/Create"]
 layout_mode = 2
-placeholder_text = "Trigger Text"
-
-[node name="TargetLabel" type="Label" parent="State/VBox/Transitions/VBox/AddTransition/VBox/Create"]
-layout_mode = 2
 size_flags_horizontal = 3
-text = "Target State:"
+tooltip_text = "Enter trigger StringName"
+placeholder_text = "Trigger Text"
 
 [node name="Target" type="OptionButton" parent="State/VBox/Transitions/VBox/AddTransition/VBox/Create"]
 layout_mode = 2
 size_flags_horizontal = 3
+tooltip_text = "Select target state"
 allow_reselect = true
 
-[node name="AddNew" type="Button" parent="State/VBox/Transitions/VBox/AddTransition/VBox"]
+[node name="AddNew" type="Button" parent="State/VBox/Transitions/VBox/AddTransition/VBox/Create"]
 layout_mode = 2
 size_flags_horizontal = 4
+tooltip_text = "Add new transition"
 disabled = true
-text = "Add Transition"
+text = "Add"
 icon = ExtResource("2_dar12")
 
 [node name="CallbacksHeader" parent="State/VBox" instance=ExtResource("2_js514")]
 layout_mode = 2
 theme = SubResource("Theme_xtmr4")
 section_name = "Callbacks"
+allow_removal = false
 
 [node name="Callbacks" type="MarginContainer" parent="State/VBox"]
 visible = false
@@ -176,6 +163,8 @@ hide_folding = true
 enable_recursive_folding = false
 hide_root = true
 select_mode = 1
+scroll_horizontal_enabled = false
+scroll_vertical_enabled = false
 
 [node name="AddCallback" type="MarginContainer" parent="State/VBox/Callbacks/VBox"]
 layout_mode = 2
@@ -190,16 +179,11 @@ horizontal_alignment = 1
 
 [node name="Create" type="GridContainer" parent="State/VBox/Callbacks/VBox/AddCallback/VBox"]
 layout_mode = 2
-columns = 2
-
-[node name="TransitionLabel" type="Label" parent="State/VBox/Callbacks/VBox/AddCallback/VBox/Create"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Transition:"
+columns = 3
 
 [node name="TransitionList" type="OptionButton" parent="State/VBox/Callbacks/VBox/AddCallback/VBox/Create"]
 layout_mode = 2
-size_flags_horizontal = 3
+tooltip_text = "Select a state transition"
 selected = 0
 item_count = 3
 popup/item_0/text = "enter"
@@ -208,29 +192,28 @@ popup/item_1/id = 1
 popup/item_2/text = "exit"
 popup/item_2/id = 2
 
-[node name="CallableLabel" type="Label" parent="State/VBox/Callbacks/VBox/AddCallback/VBox/Create"]
-layout_mode = 2
-text = "Callable:"
-
 [node name="CallableButton" type="Button" parent="State/VBox/Callbacks/VBox/AddCallback/VBox/Create"]
 layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Click to select a callable"
 text = "Callable"
 
-[node name="AddNew" type="Button" parent="State/VBox/Callbacks/VBox/AddCallback/VBox"]
+[node name="AddNew" type="Button" parent="State/VBox/Callbacks/VBox/AddCallback/VBox/Create"]
 layout_mode = 2
 size_flags_horizontal = 4
+tooltip_text = "Add new callback"
 disabled = true
-text = "Add Callback"
+text = "Add"
 icon = ExtResource("2_dar12")
 
+[connection signal="remove_pressed" from="StateHeader" to="." method="_on_remove_state_pressed"]
 [connection signal="toggled" from="StateHeader" to="." method="_on_state_toggled"]
-[connection signal="pressed" from="State/VBox/HBox/Remove" to="." method="_on_remove_state_pressed"]
 [connection signal="toggled" from="State/VBox/TransitionsHeader" to="." method="_on_transitions_toggled"]
 [connection signal="text_changed" from="State/VBox/Transitions/VBox/AddTransition/VBox/Create/Trigger" to="." method="_on_trigger_changed"]
 [connection signal="text_submitted" from="State/VBox/Transitions/VBox/AddTransition/VBox/Create/Trigger" to="." method="_on_trigger_submitted"]
 [connection signal="item_selected" from="State/VBox/Transitions/VBox/AddTransition/VBox/Create/Target" to="." method="_on_target_selected"]
-[connection signal="pressed" from="State/VBox/Transitions/VBox/AddTransition/VBox/AddNew" to="." method="_on_add_new_pressed"]
+[connection signal="pressed" from="State/VBox/Transitions/VBox/AddTransition/VBox/Create/AddNew" to="." method="_on_add_new_pressed"]
 [connection signal="toggled" from="State/VBox/CallbacksHeader" to="." method="_on_callbacks_toggled"]
 [connection signal="button_clicked" from="State/VBox/Callbacks/VBox/Callbacks" to="." method="_on_callbacks_button_clicked"]
 [connection signal="pressed" from="State/VBox/Callbacks/VBox/AddCallback/VBox/Create/CallableButton" to="." method="_on_callable_select_pressed"]
-[connection signal="pressed" from="State/VBox/Callbacks/VBox/AddCallback/VBox/AddNew" to="." method="_on_add_new_callback_pressed"]
+[connection signal="pressed" from="State/VBox/Callbacks/VBox/AddCallback/VBox/Create/AddNew" to="." method="_on_add_new_callback_pressed"]

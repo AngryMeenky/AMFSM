@@ -3,7 +3,9 @@ extends PanelContainer
 class_name AmfsmSectionHeader
 
 
+signal remove_pressed()
 signal toggled(expanded: bool)
+
 
 @onready var _toggle := $Header/CheckButton as CheckButton
 @onready var _name := $Header/Label as Label
@@ -13,6 +15,15 @@ signal toggled(expanded: bool)
 	set(val):
 		section_name = val
 		($Header/Label if _name == null else _name).text = val
+@export var expanded := false:
+	set(val):
+		($Header/CheckButton if _toggle == null else _toggle).set_pressed(val)
+	get:
+		return ($Header/CheckButton if _toggle == null else _toggle).button_pressed
+@export var allow_removal := false:
+	set(val):
+		allow_removal = val
+		$Header/Button.visible = val
 
 
 func set_section_name(nam: String) -> void:
@@ -35,3 +46,7 @@ func _gui_input(event: InputEvent) -> void:
 
 func _on_toggled(vis: bool):
 	toggled.emit(_toggle.button_pressed)
+
+
+func _on_remove_pressed() -> void:
+	remove_pressed.emit()

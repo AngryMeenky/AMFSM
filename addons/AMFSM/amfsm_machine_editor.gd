@@ -195,7 +195,7 @@ func _on_request_select_callback(state: AmfsmStateEditor, action: StringName):
 
 
 func _on_callable_selected(node: Node, method: String) -> void:
-	var fsm := get_edited_object() as FiniteStateMachine
+	var fsm := get_edited_object() as AMFiniteStateMachine
 	var resolve := fsm.get_node_or_null(fsm.resolve_root)
 	if resolve != null:
 		var script = node.get_script()
@@ -208,7 +208,7 @@ func _on_callable_selected(node: Node, method: String) -> void:
 				var line := code.get_line_count()
 				code.deselect()
 				code.insert_text(
-					"\n\nfunc %s(fsm: FiniteStateMachine, state: StringName) -> void:\n\tpass\n" % method,
+					"\n\nfunc %s(fsm: AMFiniteStateMachine, state: StringName) -> void:\n\tpass\n" % method,
 					 line - 1,
 					 0
 				)

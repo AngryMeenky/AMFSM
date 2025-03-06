@@ -12,16 +12,15 @@ signal request_select_callback(state: AmfsmStateEditor, event: StringName)
 signal request_add_callback(state: AmfsmStateEditor, event: StringName, path: NodePath)
 signal request_remove_callback(state: AmfsmStateEditor, event: StringName, path: NodePath)
 
-@onready var remove := $State/VBox/HBox/Remove
 @onready var transition_list := $State/VBox/Transitions/VBox/Transitions
 @onready var transition_add := $State/VBox/Transitions/VBox/AddTransition
-@onready var add_new_transition := $State/VBox/Transitions/VBox/AddTransition/VBox/AddNew
+@onready var add_new_transition := $State/VBox/Transitions/VBox/AddTransition/VBox/Create/AddNew
 @onready var trigger := $State/VBox/Transitions/VBox/AddTransition/VBox/Create/Trigger
 @onready var targets := $State/VBox/Transitions/VBox/AddTransition/VBox/Create/Target
 @onready var callbacks := $State/VBox/Callbacks/VBox/Callbacks
 @onready var transitions := $State/VBox/Callbacks/VBox/AddCallback/VBox/Create/TransitionList
 @onready var callable_select := $State/VBox/Callbacks/VBox/AddCallback/VBox/Create/CallableButton
-@onready var add_new_callback := $State/VBox/Callbacks/VBox/AddCallback/VBox/AddNew
+@onready var add_new_callback := $State/VBox/Callbacks/VBox/AddCallback/VBox/Create/AddNew
 
 var by_name := {}
 var by_action := { "enter": {}, "stay": {}, "exit": {} }
@@ -39,7 +38,7 @@ func _ready() -> void:
 		var text: String = transitions.get_item_text(idx)
 		var item := callback_root.create_child()
 		item.set_text(0, text)
-		#item.set_icon(0, null)
+		item.set_icon(0, preload("res://addons/AMFSM/icons/Signal.svg"))
 		transitions.set_item_metadata(idx, [ StringName(text), item ])
 		by_action[text]["[tree-root]"] = item
 
@@ -48,14 +47,14 @@ func set_state_name(_name: StringName) -> void:
 	state_name = _name
 	$StateHeader.section_name = _name
 	match _name:
-		FiniteStateMachine.START:
+		AMFiniteStateMachine.START:
 			transition_add.visible = true
 			transition_list.visible = true
-			remove.disabled = true
-		FiniteStateMachine.ERROR, FiniteStateMachine.FINAL:
+			$StateHeader.allow_removal = false
+		AMFiniteStateMachine.ERROR, AMFiniteStateMachine.FINAL:
 			transition_add.visible = false
 			transition_list.visible = false
-			remove.disabled = true
+			$StateHeader.allow_removal = false
 		_:
 			transition_add.visible = true
 			transition_list.visible = true
@@ -85,11 +84,14 @@ func get_raw_state() -> Dictionary:
 
 func _update_callbacks(raw: Dictionary, action: StringName) -> void:
 	var callbacks: Array = raw.get(action, [])
+	var changed := false
 	for callback in callbacks:
-		add_callback(action, callback)
+		changed = changed or add_callback(action, callback)
 	for callback in by_action[action].keys():
 		if str(callback) not in callbacks:
-			remove_callback(action, callback)
+			changed = changed or remove_callback(action, callback)
+	if changed:
+		self.callbacks.update_minimum_size()
 
 
 func callback_selected(path: NodePath) -> void:
@@ -150,20 +152,22 @@ func remove_transition(trigger: StringName) -> void:
 	by_name.erase(trigger)
 
 
-func add_callback(event: StringName, callable: NodePath) -> void:
+func add_callback(event: StringName, callable: NodePath) -> bool:
 	var dict: Dictionary = by_action[event]
 	var root: TreeItem = dict["[tree-root]"]
 	var display: TreeItem = dict.get(callable)
 	if display == null:
 		display = root.create_child()
-		# display.set_icon(0, null)
+		display.set_icon(0, preload("res://addons/AMFSM/icons/Slot.svg"))
 		display.set_text(0, "%s::%s" % [ callable.get_concatenated_names(), callable.get_concatenated_subnames()])
 		display.add_button(1, preload("res://addons/AMFSM/icons/Remove.svg"), -1, false, "Remove")
 		display.set_metadata(0, [ event, callable ])
 		dict[callable] = display
+		return true
+	return false
 
 
-func remove_callback(event: StringName, callable: NodePath) -> void:
+func remove_callback(event: StringName, callable: NodePath) -> bool:
 	var dict: Dictionary = by_action[event]
 	var root: TreeItem = dict["[tree-root]"]
 	var display: TreeItem = dict.get(callable)
@@ -171,6 +175,8 @@ func remove_callback(event: StringName, callable: NodePath) -> void:
 		dict.erase(callable)
 		root.remove_child(display)
 		display.free()
+		return true
+	return false
 
 
 func _on_add_new_pressed() -> void:
@@ -225,6 +231,7 @@ func _on_add_new_callback_pressed() -> void:
 
 func _on_callable_select_pressed() -> void:
 	request_select_callback.emit(self, transitions.get_item_metadata(transitions.selected)[0])
+
 
 
 func _on_callbacks_button_clicked(item: TreeItem, _column: int, _id: int, mouse_button_index: int) -> void:
