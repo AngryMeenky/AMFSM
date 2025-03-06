@@ -11,6 +11,7 @@ signal state_changed(fsm: FiniteStateMachine, from: StringName, to: StringName)
 const START := &"Start"
 const FINAL := &"Final"
 const ERROR := &"Error"
+const _NIL_CALL := Callable()
 
 
 var _states := {}
@@ -71,12 +72,12 @@ func remove_state(name: StringName) -> void:
 	states.erase(state)
 
 
-func add_callbacks(state: StringName, enter = null, stay = null, exit = null) -> void:
+func add_callbacks(state: StringName, enter = _NIL_CALL, stay = _NIL_CALL, exit = _NIL_CALL) -> void:
 	assert(state in _states, "Attempt to update a non-existant state")
 	_states[state].add_callbacks(enter, stay, exit)
 
 
-func remove_callbacks(state: StringName, enter = null, stay = null, exit = null) -> void:
+func remove_callbacks(state: StringName, enter = _NIL_CALL, stay = _NIL_CALL, exit = _NIL_CALL) -> void:
 	assert(state in _states, "Attempt to update a non-existant state")
 	_states[state].remove_callbacks(enter, stay, exit)
 
@@ -92,7 +93,7 @@ func remove_transition(from: StringName, trigger: StringName) -> void:
 	_states[from].remove_transition(trigger)
 
 
-func update(trigger: StringName) -> State:
+func update(trigger: StringName) -> StringName:
 	assert(not _transitioning, "Can't update FSM during an update")
 	_transitioning = true
 	var next := _current.get_target(trigger)
@@ -110,7 +111,7 @@ func update(trigger: StringName) -> State:
 	# be loud about the errored state
 	if _current.name == ERROR:
 		errored.emit(self)
-	return next
+	return next.name
 
 
 func reset() -> void:
