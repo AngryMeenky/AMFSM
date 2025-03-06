@@ -127,7 +127,7 @@ func reset() -> void:
 
 func _resolve_callback(np: NodePath) -> Callable:
 	if np == ^"":
-		return Callable()
+		return _NIL_CALL
 	assert(np.get_subname_count() == 1, "NodePath only specifies a Node: %s" % np)
 	return Callable(get_node(resolve_root).get_node(np), np.get_subname(0))
 
@@ -182,7 +182,7 @@ class State extends RefCounted:
 		return state
 
 
-	func add_callbacks(enter: Callable, stay := Callable(), exit := Callable()) -> void:
+	func add_callbacks(enter: Callable, stay := _NIL_CALL, exit := _NIL_CALL) -> void:
 		if enter.is_valid():
 			on_enter.connect(enter)
 		if stay.is_valid():
@@ -191,7 +191,7 @@ class State extends RefCounted:
 			on_exit.connect(exit)
 
 
-	func remove_callbacks(enter: Callable, stay := Callable(), exit := Callable()) -> void:
+	func remove_callbacks(enter: Callable, stay := _NIL_CALL, exit := _NIL_CALL) -> void:
 		if enter.is_valid():
 			on_enter.disconnect(enter)
 		if stay.is_valid():
