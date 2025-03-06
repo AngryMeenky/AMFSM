@@ -35,6 +35,7 @@ func _ready() -> void:
 	# make sure all the states exist
 	for state in states:
 		_states[state.name] = State.make(self, state["name"])
+	_current = _states[START]
 	# now add in all the transitions
 	for state in states:
 		unpack(root, state)
@@ -171,6 +172,7 @@ class State extends RefCounted:
 	static func make(parent: AMFiniteStateMachine, name: StringName) -> State:
 		var state = State.new()
 		state.name = name
+		state.host = parent
 		match name:
 			ERROR, FINAL:
 				state.transitions.make_read_only()
