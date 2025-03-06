@@ -18,6 +18,7 @@ var _states := {}
 var _current: State = null
 var _transitioning := false
 
+@export var wipe_after_ready := true
 @export var resolve_root: NodePath = ^"."
 @export var states: Array[Dictionary] = [
 	{ "name": START },
@@ -40,17 +41,24 @@ func _ready() -> void:
 	for state in states:
 		unpack(root, state)
 
+	if wipe_after_ready:
+		states.clear()
+
 
 func is_errored() -> bool:
-	return _current.name == ERROR
+	return _current == null or _current.name == ERROR
 
 
 func is_completed() -> bool:
-	return _current.name == FINAL
+	return _current != null and _current.name == FINAL
+
+
+func is_reset() -> bool:
+	return _current != null and _current.name == START
 
 
 func get_state() -> StringName:
-	return _current.name
+	return _current.name if _current != null else ERROR
 
 
 func add_state(state: StringName) -> void:
