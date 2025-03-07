@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://5d6kbj270vqa"]
+
+[ext_resource type="Script" path="res://addons/AMFSM/amfsm_visual_editor.gd" id="1_ourun"]
+[ext_resource type="Script" path="res://addons/AMFSM/amfsm_visual_editor_grid.gd" id="1_u1rpc"]
+
+[node name="MarginContainer" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="AmfsmVisualEditor" type="SubViewportContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch = true
+script = ExtResource("1_ourun")
+
+[node name="SubViewport" type="SubViewport" parent="AmfsmVisualEditor"]
+handle_input_locally = false
+size = Vector2i(1152, 648)
+render_target_update_mode = 4
+
+[node name="Node2D" type="Node2D" parent="AmfsmVisualEditor/SubViewport"]
+
+[node name="Camera2D" type="Camera2D" parent="AmfsmVisualEditor/SubViewport/Node2D"]
+
+[node name="Grid" type="Node2D" parent="AmfsmVisualEditor/SubViewport/Node2D"]
+script = ExtResource("1_u1rpc")
+grid_width = 2
+
+[connection signal="resized" from="AmfsmVisualEditor" to="AmfsmVisualEditor" method="_on_resized"]
