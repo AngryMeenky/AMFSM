@@ -45,7 +45,10 @@ func _update_property():
 	# is the ordering different?
 	if in_order.hash() != new_order.hash():
 		alphabetical = new_order.duplicate()
-		alphabetical.sort()
+		alphabetical.sort_custom(
+			func(lhs: StringName, rhs: StringName) -> bool:
+				return lhs.naturalcasecmp_to(rhs) == -1
+		)
 
 		# reorder the children and update the target list for each state
 		for idx in new_order.size():
