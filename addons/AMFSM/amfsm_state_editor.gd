@@ -12,6 +12,7 @@ signal request_select_callback(state: AmfsmStateEditor, event: StringName)
 signal request_add_callback(state: AmfsmStateEditor, event: StringName, path: NodePath)
 signal request_remove_callback(state: AmfsmStateEditor, event: StringName, path: NodePath)
 
+
 @onready var transition_list := $State/VBox/Transitions/VBox/Transitions
 @onready var transition_add := $State/VBox/Transitions/VBox/AddTransition
 @onready var add_new_transition := $State/VBox/Transitions/VBox/AddTransition/VBox/Create/AddNew
@@ -43,21 +44,35 @@ func _ready() -> void:
 		by_action[text]["[tree-root]"] = item
 
 
+func _disable_action(idx: int, disabled: bool) -> void:
+	transitions.set_item_disabled(idx, disabled)
+	by_action[transitions.get_item_text(idx)]["[tree-root]"].visible = not disabled
+
+
 func set_state_name(_name: StringName) -> void:
 	state_name = _name
-	$StateHeader.section_name = _name
+	var header := $StateHeader
+	var t_header := $State/VBox/TransitionsHeader
+	header.section_name = _name
 	match _name:
 		AMFiniteStateMachine.START:
+			t_header.visible = true
 			transition_add.visible = true
 			transition_list.visible = true
-			$StateHeader.allow_removal = false
+			header.allow_removal = false
+			_disable_action(2, false)
 		AMFiniteStateMachine.ERROR, AMFiniteStateMachine.FINAL:
+			t_header.visible = false
 			transition_add.visible = false
 			transition_list.visible = false
-			$StateHeader.allow_removal = false
+			header.allow_removal = false
+			_disable_action(2, _name == AMFiniteStateMachine.ERROR)
 		_:
+			t_header.visible = true
 			transition_add.visible = true
 			transition_list.visible = true
+			header.allow_removal = true
+			_disable_action(2, false)
 
 
 func set_raw_state(raw: Dictionary) -> void:
