@@ -92,15 +92,23 @@ layout_mode = 2
 layout_mode = 2
 columns = 3
 
-[node name="Triggers" type="Label" parent="State/VBox/Transitions/VBox/Transitions"]
+[node name="PanelContainer" type="PanelContainer" parent="State/VBox/Transitions/VBox/Transitions"]
 layout_mode = 2
-size_flags_horizontal = 3
-text = "Trigger Input"
 
-[node name="Targets" type="Label" parent="State/VBox/Transitions/VBox/Transitions"]
+[node name="Triggers" type="Label" parent="State/VBox/Transitions/VBox/Transitions/PanelContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Target State"
+text = " Trigger Input "
+horizontal_alignment = 1
+
+[node name="PanelContainer2" type="PanelContainer" parent="State/VBox/Transitions/VBox/Transitions"]
+layout_mode = 2
+
+[node name="Targets" type="Label" parent="State/VBox/Transitions/VBox/Transitions/PanelContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = " Target State "
+horizontal_alignment = 1
 
 [node name="LeftIntentionallyBlank" type="Label" parent="State/VBox/Transitions/VBox/Transitions"]
 layout_mode = 2
@@ -116,9 +124,8 @@ layout_mode = 2
 text = "Create New Transition"
 horizontal_alignment = 1
 
-[node name="Create" type="GridContainer" parent="State/VBox/Transitions/VBox/AddTransition/VBox"]
+[node name="Create" type="HBoxContainer" parent="State/VBox/Transitions/VBox/AddTransition/VBox"]
 layout_mode = 2
-columns = 3
 
 [node name="Trigger" type="LineEdit" parent="State/VBox/Transitions/VBox/AddTransition/VBox/Create"]
 layout_mode = 2
@@ -155,7 +162,6 @@ size_flags_vertical = 3
 layout_mode = 2
 
 [node name="Callbacks" type="Tree" parent="State/VBox/Callbacks/VBox"]
-custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 size_flags_vertical = 3
 columns = 2
@@ -177,9 +183,8 @@ layout_mode = 2
 text = "Add Callback"
 horizontal_alignment = 1
 
-[node name="Create" type="GridContainer" parent="State/VBox/Callbacks/VBox/AddCallback/VBox"]
+[node name="Create" type="HBoxContainer" parent="State/VBox/Callbacks/VBox/AddCallback/VBox"]
 layout_mode = 2
-columns = 3
 
 [node name="TransitionList" type="OptionButton" parent="State/VBox/Callbacks/VBox/AddCallback/VBox/Create"]
 layout_mode = 2
