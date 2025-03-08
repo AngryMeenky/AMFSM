@@ -12,4 +12,6 @@ func _enter_tree() -> void:
 
 
 func _exit_tree() -> void:
+	remove_control_from_bottom_panel(plugin.get_visual_editor())
+	plugin.set_visual_editor_button(null)
 	remove_inspector_plugin(plugin)
