@@ -1,9 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://5d6kbj270vqa"]
+[gd_scene load_steps=9 format=3 uid="uid://5d6kbj270vqa"]
 
+[ext_resource type="Theme" uid="uid://ditmlsqklk8y1" path="res://addons/AMFSM/amfsm_section_theme.tres" id="1_ax3wf"]
 [ext_resource type="Script" path="res://addons/AMFSM/amfsm_visual_editor.gd" id="1_ourun"]
 [ext_resource type="Script" path="res://addons/AMFSM/amfsm_visual_editor_grid.gd" id="1_u1rpc"]
+[ext_resource type="Texture2D" uid="uid://ct3g0jqp1mp17" path="res://addons/AMFSM/icons/CenterView.svg" id="2_ap2h5"]
+[ext_resource type="Texture2D" uid="uid://5exspfr8w8my" path="res://addons/AMFSM/icons/FSM.svg" id="3_cmap0"]
+[ext_resource type="Texture2D" uid="uid://bphssgxeac2h7" path="res://addons/AMFSM/icons/ZoomReset.svg" id="5_floc0"]
+[ext_resource type="Texture2D" uid="uid://do6w83xguku6q" path="res://addons/AMFSM/icons/ZoomMore.svg" id="5_hi02n"]
+[ext_resource type="Texture2D" uid="uid://h24gw8dclrb7" path="res://addons/AMFSM/icons/ZoomLess.svg" id="6_q5h0e"]
 
 [node name="MarginContainer" type="MarginContainer"]
+clip_children = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -11,25 +18,62 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-
-[node name="AmfsmVisualEditor" type="SubViewportContainer" parent="."]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-stretch = true
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
 script = ExtResource("1_ourun")
 
-[node name="SubViewport" type="SubViewport" parent="AmfsmVisualEditor"]
-handle_input_locally = false
-size = Vector2i(1152, 648)
-render_target_update_mode = 4
-
-[node name="Node2D" type="Node2D" parent="AmfsmVisualEditor/SubViewport"]
-
-[node name="Camera2D" type="Camera2D" parent="AmfsmVisualEditor/SubViewport/Node2D"]
-
-[node name="Grid" type="Node2D" parent="AmfsmVisualEditor/SubViewport/Node2D"]
+[node name="Grid" type="Panel" parent="."]
+clip_children = 2
+layout_mode = 2
 script = ExtResource("1_u1rpc")
-grid_width = 2
+grid_color = Color(0.25683, 0.414708, 0.414657, 1)
 
-[connection signal="resized" from="AmfsmVisualEditor" to="AmfsmVisualEditor" method="_on_resized"]
+[node name="Center" type="Node2D" parent="Grid"]
+position = Vector2(576, 324)
+
+[node name="Sprite2D" type="Sprite2D" parent="Grid/Center"]
+texture = ExtResource("3_cmap0")
+
+[node name="UI" type="MarginContainer" parent="."]
+layout_mode = 2
+theme = ExtResource("1_ax3wf")
+theme_type_variation = &"VisualMarginContainer"
+
+[node name="VBox" type="VBoxContainer" parent="UI"]
+layout_mode = 2
+
+[node name="Controls" type="HBoxContainer" parent="UI/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Center" type="Button" parent="UI/VBox/Controls"]
+layout_mode = 2
+tooltip_text = "Recenter View"
+icon = ExtResource("2_ap2h5")
+
+[node name="In" type="Button" parent="UI/VBox/Controls"]
+layout_mode = 2
+tooltip_text = "Zoom In"
+icon = ExtResource("5_hi02n")
+
+[node name="Reset" type="Button" parent="UI/VBox/Controls"]
+layout_mode = 2
+tooltip_text = "Reset Zoom"
+icon = ExtResource("5_floc0")
+
+[node name="Out" type="Button" parent="UI/VBox/Controls"]
+layout_mode = 2
+tooltip_text = "Zoom Out"
+icon = ExtResource("6_q5h0e")
+
+[node name="Amount" type="Label" parent="UI/VBox/Controls"]
+layout_mode = 2
+text = "100.0%"
+
+[connection signal="resized" from="Grid" to="Grid" method="_on_resized"]
+[connection signal="pressed" from="UI/VBox/Controls/Center" to="." method="_on_center_view"]
+[connection signal="pressed" from="UI/VBox/Controls/In" to="." method="_on_zoom_in"]
+[connection signal="pressed" from="UI/VBox/Controls/Reset" to="." method="_on_reset_zoom"]
+[connection signal="pressed" from="UI/VBox/Controls/Out" to="." method="_on_zoom_out"]
