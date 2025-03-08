@@ -14,6 +14,7 @@ var by_name := {}
 var in_order: Array[StringName] = []
 var alphabetical: Array[StringName] = []
 var edited_state: AmfsmStateEditor = null
+var visual_editor: AmfsmVisualEditor = null
 
 
 
@@ -22,6 +23,12 @@ func _ready() -> void:
 	add_focusable(add_new_state)
 	add_focusable(new_state_name)
 	set_bottom_editor(bottom_editor)
+
+
+func set_visual_editor(visual: AmfsmVisualEditor) -> void:
+	visual_editor = visual
+	if visual != null:
+		visual.set_states(by_name)
 
 
 func _get_edited_value() -> Array[Dictionary]:
@@ -68,6 +75,8 @@ func _update_property():
 			state.request_select_callback.disconnect(_on_request_select_callback)
 			states.remove_child(state)
 			state.queue_free()
+
+		visual_editor.update_states(new_order) # alert the visual editor
 		in_order = new_order # record the change
 
 
