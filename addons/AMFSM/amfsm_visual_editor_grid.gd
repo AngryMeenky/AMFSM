@@ -1,12 +1,15 @@
 @tool
 extends Panel
 
+
+@onready var center: Node2D = $Center
+
 @export_range(0.0625, 8, 0.0625) var zoom := 1.0:
 	set(val):
 		zoom = val
 		queue_redraw()
-		if center != null:
-			center.position = grid_offset * zoom + size * 0.5
+		(center if center != null else $Center).position = grid_offset * val + size * 0.5
+		(center if center != null else $Center).scale = Vector2(val, val)
 
 @export_group("Grid Settings", "grid_")
 @export var grid_draw_lines := true:
@@ -40,11 +43,8 @@ extends Panel
 		if center != null:
 			center.position = grid_offset * zoom + size * 0.5
 
+var dragging := false
 var grid_lines := PackedVector2Array()
-
-@onready var center: Node2D = $Center
-
-
 
 
 func _draw() -> void:
@@ -70,6 +70,13 @@ func _draw() -> void:
 
 		draw_multiline(grid_lines, grid_color, grid_width)
 
+
+func _unhandled_input(event):
+	if dragging and event is InputEventMouseMotion:
+		grid_offset += event.relative / zoom
+	elif event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			dragging = event.pressed
 
 func _on_resized() -> void:
 	center.position = grid_offset + size * 0.5

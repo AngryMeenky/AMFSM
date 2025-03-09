@@ -1,10 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://5d6kbj270vqa"]
+[gd_scene load_steps=8 format=3 uid="uid://5d6kbj270vqa"]
 
 [ext_resource type="Theme" uid="uid://ditmlsqklk8y1" path="res://addons/AMFSM/amfsm_section_theme.tres" id="1_ax3wf"]
 [ext_resource type="Script" path="res://addons/AMFSM/amfsm_visual_editor.gd" id="1_ourun"]
 [ext_resource type="Script" path="res://addons/AMFSM/amfsm_visual_editor_grid.gd" id="1_u1rpc"]
 [ext_resource type="Texture2D" uid="uid://ct3g0jqp1mp17" path="res://addons/AMFSM/icons/CenterView.svg" id="2_ap2h5"]
-[ext_resource type="Texture2D" uid="uid://5exspfr8w8my" path="res://addons/AMFSM/icons/FSM.svg" id="3_cmap0"]
 [ext_resource type="Texture2D" uid="uid://bphssgxeac2h7" path="res://addons/AMFSM/icons/ZoomReset.svg" id="5_floc0"]
 [ext_resource type="Texture2D" uid="uid://do6w83xguku6q" path="res://addons/AMFSM/icons/ZoomMore.svg" id="5_hi02n"]
 [ext_resource type="Texture2D" uid="uid://h24gw8dclrb7" path="res://addons/AMFSM/icons/ZoomLess.svg" id="6_q5h0e"]
@@ -29,12 +28,10 @@ clip_children = 2
 layout_mode = 2
 script = ExtResource("1_u1rpc")
 grid_color = Color(0.25683, 0.414708, 0.414657, 1)
+grid_offset = Vector2(32, 16)
 
 [node name="Center" type="Node2D" parent="Grid"]
-position = Vector2(576, 324)
-
-[node name="Sprite2D" type="Sprite2D" parent="Grid/Center"]
-texture = ExtResource("3_cmap0")
+position = Vector2(608, 340)
 
 [node name="UI" type="MarginContainer" parent="."]
 layout_mode = 2
