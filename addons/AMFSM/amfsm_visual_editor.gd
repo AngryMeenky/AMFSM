@@ -11,12 +11,13 @@ var by_name := {}
 var verts := {}
 var _host: EditorPlugin = null
 var zoom_idx: int = _ZOOM.bsearch(1.0)
+var states: Array[AmfsmVisualState] = []
 
 @onready var _grid: Panel = $Grid
 @onready var _ui: MarginContainer = $UI
-@onready var _zoom_in: Button = $UI/VBox/Controls/In
-@onready var _zoom_out: Button = $UI/VBox/Controls/Out
-@onready var _zoom_amount: Label = $UI/VBox/Controls/Amount
+@onready var _zoom_in: Button = $UI/Controls/In
+@onready var _zoom_out: Button = $UI/Controls/Out
+@onready var _zoom_amount: Label = $UI/Controls/Amount
 
 
 func _ready() -> void:
@@ -35,6 +36,15 @@ func update_states(new_order: Array[StringName]) -> void:
 	prints(new_order)
 
 
+func _place_states() -> void:
+	var zoom: float = _grid.zoom
+	var center: Vector2  = _grid.size * 0.5 + _grid.grid_offset * zoom
+	prints(center, "@", zoom)
+	for state in states:
+		state.zoom = zoom
+		state.position = state.state_location * zoom + center
+
+
 func _on_center_view() -> void:
 	_grid.grid_offset = Vector2.ZERO
 
@@ -48,6 +58,7 @@ func _on_zoom_in() -> void:
 		zoom_idx = next
 		_grid.zoom = _ZOOM[zoom_idx]
 		_zoom_amount.text = "%5.1f%%" % (_ZOOM[zoom_idx] * 100)
+		_place_states()
 
 
 func _on_reset_zoom() -> void:
@@ -56,6 +67,7 @@ func _on_reset_zoom() -> void:
 	zoom_idx = _ZOOM.bsearch(1.0)
 	_grid.zoom = 1.0
 	_zoom_amount.text = "%5.1f%%" % (_ZOOM[zoom_idx] * 100)
+	_place_states()
 
 
 func _on_zoom_out() -> void:
@@ -66,3 +78,4 @@ func _on_zoom_out() -> void:
 		zoom_idx = next
 		_grid.zoom = _ZOOM[zoom_idx]
 		_zoom_amount.text = "%5.1f%%" % (_ZOOM[zoom_idx] * 100)
+		_place_states()

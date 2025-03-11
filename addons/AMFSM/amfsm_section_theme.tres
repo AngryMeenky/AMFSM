@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=5 format=3 uid="uid://ditmlsqklk8y1"]
+[gd_resource type="Theme" load_steps=6 format=3 uid="uid://ditmlsqklk8y1"]
 
 [ext_resource type="Texture2D" uid="uid://b80o3cjswonxh" path="res://addons/AMFSM/icons/CodeFoldDownArrow.svg" id="1_vfqxa"]
 [ext_resource type="Texture2D" uid="uid://csn5mevk1osgl" path="res://addons/AMFSM/icons/CodeFoldedRightArrow.svg" id="2_6kfda"]
@@ -8,6 +8,19 @@ bg_color = Color(1, 1, 1, 0.0627451)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0n0h7"]
 bg_color = Color(1, 1, 1, 0.12549)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c487o"]
+bg_color = Color(0.168627, 0.168627, 0.168627, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_size = 2
+shadow_offset = Vector2(3, 3)
 
 [resource]
 resource_local_to_scene = true
@@ -28,3 +41,5 @@ VisualMarginContainer/constants/margin_bottom = 4
 VisualMarginContainer/constants/margin_left = 4
 VisualMarginContainer/constants/margin_right = 4
 VisualMarginContainer/constants/margin_top = 4
+VisualPanelContainer/base_type = &"PanelContainer"
+VisualPanelContainer/styles/panel = SubResource("StyleBoxFlat_c487o")

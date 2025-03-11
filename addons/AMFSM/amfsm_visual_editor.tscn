@@ -26,51 +26,52 @@ script = ExtResource("1_ourun")
 [node name="Grid" type="Panel" parent="."]
 clip_children = 2
 layout_mode = 2
+mouse_filter = 1
 script = ExtResource("1_u1rpc")
 grid_color = Color(0.25683, 0.414708, 0.414657, 1)
 grid_offset = Vector2(32, 16)
-
-[node name="Center" type="Node2D" parent="Grid"]
-position = Vector2(608, 340)
 
 [node name="UI" type="MarginContainer" parent="."]
 layout_mode = 2
 theme = ExtResource("1_ax3wf")
 theme_type_variation = &"VisualMarginContainer"
 
-[node name="VBox" type="VBoxContainer" parent="UI"]
+[node name="States" type="Control" parent="UI"]
 layout_mode = 2
+mouse_filter = 1
 
-[node name="Controls" type="HBoxContainer" parent="UI/VBox"]
+[node name="Controls" type="HBoxContainer" parent="UI"]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 0
+size_flags_vertical = 0
 
-[node name="Center" type="Button" parent="UI/VBox/Controls"]
+[node name="Center" type="Button" parent="UI/Controls"]
 layout_mode = 2
 tooltip_text = "Recenter View"
 icon = ExtResource("2_ap2h5")
 
-[node name="In" type="Button" parent="UI/VBox/Controls"]
+[node name="In" type="Button" parent="UI/Controls"]
 layout_mode = 2
 tooltip_text = "Zoom In"
 icon = ExtResource("5_hi02n")
 
-[node name="Reset" type="Button" parent="UI/VBox/Controls"]
+[node name="Reset" type="Button" parent="UI/Controls"]
 layout_mode = 2
 tooltip_text = "Reset Zoom"
 icon = ExtResource("5_floc0")
 
-[node name="Out" type="Button" parent="UI/VBox/Controls"]
+[node name="Out" type="Button" parent="UI/Controls"]
 layout_mode = 2
 tooltip_text = "Zoom Out"
 icon = ExtResource("6_q5h0e")
 
-[node name="Amount" type="Label" parent="UI/VBox/Controls"]
+[node name="Amount" type="Label" parent="UI/Controls"]
 layout_mode = 2
 text = "100.0%"
 
-[connection signal="resized" from="Grid" to="Grid" method="_on_resized"]
-[connection signal="pressed" from="UI/VBox/Controls/Center" to="." method="_on_center_view"]
-[connection signal="pressed" from="UI/VBox/Controls/In" to="." method="_on_zoom_in"]
-[connection signal="pressed" from="UI/VBox/Controls/Reset" to="." method="_on_reset_zoom"]
-[connection signal="pressed" from="UI/VBox/Controls/Out" to="." method="_on_zoom_out"]
+[connection signal="grid_offset_changed" from="Grid" to="." method="_place_states"]
+[connection signal="resized" from="Grid" to="." method="_place_states"]
+[connection signal="pressed" from="UI/Controls/Center" to="." method="_on_center_view"]
+[connection signal="pressed" from="UI/Controls/In" to="." method="_on_zoom_in"]
+[connection signal="pressed" from="UI/Controls/Reset" to="." method="_on_reset_zoom"]
+[connection signal="pressed" from="UI/Controls/Out" to="." method="_on_zoom_out"]
