@@ -69,7 +69,7 @@ func _draw() -> void:
 		draw_multiline(grid_lines, grid_color, grid_width)
 
 
-func _unhandled_input(event):
+func _gui_input(event: InputEvent) -> void:
 	if dragging and event is InputEventMouseMotion:
 		grid_offset += event.relative / zoom
 	elif event is InputEventMouseButton:

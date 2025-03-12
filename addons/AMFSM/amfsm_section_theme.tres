@@ -1,7 +1,9 @@
-[gd_resource type="Theme" load_steps=6 format=3 uid="uid://ditmlsqklk8y1"]
+[gd_resource type="Theme" load_steps=8 format=3 uid="uid://ditmlsqklk8y1"]
 
 [ext_resource type="Texture2D" uid="uid://b80o3cjswonxh" path="res://addons/AMFSM/icons/CodeFoldDownArrow.svg" id="1_vfqxa"]
 [ext_resource type="Texture2D" uid="uid://csn5mevk1osgl" path="res://addons/AMFSM/icons/CodeFoldedRightArrow.svg" id="2_6kfda"]
+[ext_resource type="Texture2D" uid="uid://djy6ofrxbisfo" path="res://addons/AMFSM/icons/PinPressed.svg" id="3_ee3u5"]
+[ext_resource type="Texture2D" uid="uid://dqtt02ba5ljh2" path="res://addons/AMFSM/icons/PinJoint2D.svg" id="4_mwmws"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8u415"]
 bg_color = Color(1, 1, 1, 0.0627451)
@@ -36,6 +38,15 @@ MarginContainer/constants/margin_left = 8
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_8u415")
 PanelContainerHighlight/base_type = &"PanelContainer"
 PanelContainerHighlight/styles/panel = SubResource("StyleBoxFlat_0n0h7")
+VisualCheckButton/base_type = &"CheckButton"
+VisualCheckButton/icons/checked = ExtResource("3_ee3u5")
+VisualCheckButton/icons/checked_disabled = ExtResource("3_ee3u5")
+VisualCheckButton/icons/checked_disabled_mirrored = ExtResource("3_ee3u5")
+VisualCheckButton/icons/checked_mirrored = ExtResource("3_ee3u5")
+VisualCheckButton/icons/unchecked = ExtResource("4_mwmws")
+VisualCheckButton/icons/unchecked_disabled = ExtResource("4_mwmws")
+VisualCheckButton/icons/unchecked_disabled_mirrored = ExtResource("4_mwmws")
+VisualCheckButton/icons/unchecked_mirrored = ExtResource("4_mwmws")
 VisualMarginContainer/base_type = &"MarginContainer"
 VisualMarginContainer/constants/margin_bottom = 4
 VisualMarginContainer/constants/margin_left = 4

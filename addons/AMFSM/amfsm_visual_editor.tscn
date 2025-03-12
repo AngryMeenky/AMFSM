@@ -1,6 +1,5 @@
-[gd_scene load_steps=8 format=3 uid="uid://5d6kbj270vqa"]
+[gd_scene load_steps=7 format=3 uid="uid://5d6kbj270vqa"]
 
-[ext_resource type="Theme" uid="uid://ditmlsqklk8y1" path="res://addons/AMFSM/amfsm_section_theme.tres" id="1_ax3wf"]
 [ext_resource type="Script" path="res://addons/AMFSM/amfsm_visual_editor.gd" id="1_ourun"]
 [ext_resource type="Script" path="res://addons/AMFSM/amfsm_visual_editor_grid.gd" id="1_u1rpc"]
 [ext_resource type="Texture2D" uid="uid://ct3g0jqp1mp17" path="res://addons/AMFSM/icons/CenterView.svg" id="2_ap2h5"]
@@ -10,6 +9,7 @@
 
 [node name="MarginContainer" type="MarginContainer"]
 clip_children = 1
+clip_contents = true
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -24,54 +24,48 @@ theme_override_constants/margin_bottom = 0
 script = ExtResource("1_ourun")
 
 [node name="Grid" type="Panel" parent="."]
-clip_children = 2
 layout_mode = 2
 mouse_filter = 1
 script = ExtResource("1_u1rpc")
 grid_color = Color(0.25683, 0.414708, 0.414657, 1)
 grid_offset = Vector2(32, 16)
 
-[node name="UI" type="MarginContainer" parent="."]
+[node name="States" type="Control" parent="."]
 layout_mode = 2
-theme = ExtResource("1_ax3wf")
-theme_type_variation = &"VisualMarginContainer"
+mouse_filter = 2
 
-[node name="States" type="Control" parent="UI"]
-layout_mode = 2
-mouse_filter = 1
-
-[node name="Controls" type="HBoxContainer" parent="UI"]
+[node name="Controls" type="HBoxContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 
-[node name="Center" type="Button" parent="UI/Controls"]
+[node name="Center" type="Button" parent="Controls"]
 layout_mode = 2
 tooltip_text = "Recenter View"
 icon = ExtResource("2_ap2h5")
 
-[node name="In" type="Button" parent="UI/Controls"]
+[node name="In" type="Button" parent="Controls"]
 layout_mode = 2
 tooltip_text = "Zoom In"
 icon = ExtResource("5_hi02n")
 
-[node name="Reset" type="Button" parent="UI/Controls"]
+[node name="Reset" type="Button" parent="Controls"]
 layout_mode = 2
 tooltip_text = "Reset Zoom"
 icon = ExtResource("5_floc0")
 
-[node name="Out" type="Button" parent="UI/Controls"]
+[node name="Out" type="Button" parent="Controls"]
 layout_mode = 2
 tooltip_text = "Zoom Out"
 icon = ExtResource("6_q5h0e")
 
-[node name="Amount" type="Label" parent="UI/Controls"]
+[node name="Amount" type="Label" parent="Controls"]
 layout_mode = 2
 text = "100.0%"
 
 [connection signal="grid_offset_changed" from="Grid" to="." method="_place_states"]
 [connection signal="resized" from="Grid" to="." method="_place_states"]
-[connection signal="pressed" from="UI/Controls/Center" to="." method="_on_center_view"]
-[connection signal="pressed" from="UI/Controls/In" to="." method="_on_zoom_in"]
-[connection signal="pressed" from="UI/Controls/Reset" to="." method="_on_reset_zoom"]
-[connection signal="pressed" from="UI/Controls/Out" to="." method="_on_zoom_out"]
+[connection signal="pressed" from="Controls/Center" to="." method="_on_center_view"]
+[connection signal="pressed" from="Controls/In" to="." method="_on_zoom_in"]
+[connection signal="pressed" from="Controls/Reset" to="." method="_on_reset_zoom"]
+[connection signal="pressed" from="Controls/Out" to="." method="_on_zoom_out"]
